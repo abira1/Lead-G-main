@@ -139,11 +139,11 @@ const Testimonials = () => {
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
         <ScrollReveal>
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 px-4">
+          <div className="text-center mb-16 lg:mb-20">
+            <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight tracking-tight mb-6">
               Client <span className="text-[#00FFD1]">Testimonials</span>
             </h2>
-            <p className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto px-4">
+            <p className="text-lg lg:text-xl text-white/70 font-medium max-w-3xl mx-auto leading-relaxed">
               Hear what our satisfied clients have to say about our exceptional results
             </p>
           </div>
