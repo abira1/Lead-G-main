@@ -269,21 +269,54 @@ const Admin = () => {
     });
   };
 
-  const formatAppointmentTimeWithTimezone = (appointment) => {
-    if (!appointment) return { local: 'N/A', utc: 'N/A' };
+    const formatAppointmentTimeWithTimezone = (appointment) => {
+    if (!appointment) return '';
     
-    // Format local time in user's timezone
+    // Display local time and timezone
     const localTime = `${formatDate(appointment.appointment_date)} at ${formatTime(appointment.appointment_time)}`;
     const timezone = appointment.user_timezone || 'Unknown';
     
-    // Format UTC time
+    // Display UTC time if available
     const utcTime = appointment.appointment_datetime_utc 
       ? formatUTCDateTime(appointment.appointment_datetime_utc)
       : 'N/A';
-    
+
     return {
       local: `${localTime} (${timezone})`,
-      utc: utcTime
+      utc: `UTC: ${utcTime}`
+    };
+  };
+
+  // Function to convert appointment time to EST/EDT
+  const formatAppointmentTimeEST = (appointment) => {
+    if (!appointment || !appointment.appointment_date || !appointment.appointment_time) return 'N/A';
+    
+    // Create a date object from the appointment date and time
+    const appointmentDate = new Date(`${appointment.appointment_date}T${appointment.appointment_time}`);
+    
+    // Convert to EST (Eastern Time)
+    const estTime = appointmentDate.toLocaleString('en-US', {
+      timeZone: 'America/New_York',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    });
+    
+    return estTime;
+  };
+
+  // Function to get dual timezone display
+  const getDualTimezoneDisplay = (appointment) => {
+    const userTime = `${formatDate(appointment.appointment_date)} at ${formatTime(appointment.appointment_time)}`;
+    const userTimezone = appointment.user_timezone || 'Local Time';
+    const estTime = formatAppointmentTimeEST(appointment);
+    
+    return {
+      userTime: `${userTime} (${userTimezone})`,
+      estTime: `${estTime}`
     };
   };
 
@@ -579,9 +612,18 @@ const Admin = () => {
                         <span>{formatDate(selectedAppointment.appointment_date)}</span>
                       </div>
                       <span className="text-white/30">•</span>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="w-4 h-4" />
-                        <span>{formatTime(selectedAppointment.appointment_time)}</span>
+                      <div className="flex flex-col space-y-1">
+                        <div className="flex items-center space-x-2">
+                          <Clock className="w-4 h-4" />
+                          <div className="flex flex-col">
+                            <span className="text-sm text-white/90">
+                              {getDualTimezoneDisplay(selectedAppointment).userTime}
+                            </span>
+                            <span className="text-xs text-blue-400 font-medium">
+                              EST: {getDualTimezoneDisplay(selectedAppointment).estTime}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -727,13 +769,18 @@ const Admin = () => {
                               <Calendar className="w-4 h-4 text-white/50" />
                               <span className="text-sm text-white">{formatDate(selectedAppointment.appointment_date)}</span>
                             </div>
-                            <div className="flex items-center space-x-2">
-                              <Clock className="w-4 h-4 text-white/50" />
-                              <span className="text-lg text-white font-semibold">{formatTime(selectedAppointment.appointment_time)}</span>
+                            <div className="flex flex-col space-y-2">
+                              <div className="flex items-center space-x-2">
+                                <Clock className="w-4 h-4 text-white/50" />
+                                <span className="text-lg text-white font-semibold">{formatTime(selectedAppointment.appointment_time)}</span>
+                              </div>
+                              <div className="text-sm text-blue-400 font-medium ml-6">
+                                EST: {formatAppointmentTimeEST(selectedAppointment)}
+                              </div>
                             </div>
                             {selectedAppointment.user_timezone && (
                               <div className="text-xs text-white/50 mt-2">
-                                Timezone: {selectedAppointment.user_timezone}
+                                User Timezone: {selectedAppointment.user_timezone}
                               </div>
                             )}
                           </div>
@@ -847,9 +894,14 @@ const Admin = () => {
                               <Calendar className="w-4 h-4 text-[#00FFD1]" />
                               <span>{formatDate(appointment.appointment_date)}</span>
                             </div>
-                            <div className="flex items-center space-x-2 bg-white/5 p-2 rounded-lg">
-                              <Clock className="w-4 h-4 text-[#00FFD1]" />
-                              <span>{formatTime(appointment.appointment_time)}</span>
+                            <div className="flex flex-col space-y-1 bg-white/5 p-2 rounded-lg">
+                              <div className="flex items-center space-x-2">
+                                <Clock className="w-4 h-4 text-[#00FFD1]" />
+                                <span>{formatTime(appointment.appointment_time)}</span>
+                              </div>
+                              <div className="text-xs text-blue-400 font-medium ml-6">
+                                EST: {formatAppointmentTimeEST(appointment)}
+                              </div>
                             </div>
                           </div>
                           
