@@ -63,30 +63,105 @@ const AppointmentBooking = () => {
     }
   }, [location.search, setValue, watch]);
 
-  // Generate time slots (12 PM to 5 PM, 30-minute intervals)
-  const generateTimeSlots = () => {
+  // Generate fixed EST time slots (12 PM to 5 PM EST, 30-minute intervals)
+  const generateESTTimeSlots = () => {
     const slots = [];
+    // Fixed EST times from 12:00 PM to 4:30 PM (last slot before 5 PM)
     for (let hour = 12; hour < 17; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
-        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-        slots.push(time);
+        const estTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        slots.push({
+          estTime: estTime,
+          estDisplay: formatTimeSlot(estTime) // Display format for EST
+        });
       }
     }
     return slots;
   };
 
-  const allTimeSlots = generateTimeSlots();
+  // Convert EST time slots to user's local timezone
+  const generateLocalTimeSlots = (date) => {
+    if (!userTimezone || !date) return [];
+    
+    const estSlots = generateESTTimeSlots();
+    
+    return estSlots.map(slot => {
+      try {
+        // Create a proper EST date-time
+        const estDateTimeString = `${date}T${slot.estTime}:00`;
+        
+        // Parse as if it's EST and convert to user's timezone
+        const estDate = new Date(estDateTimeString);
+        
+        // Get the time in user's timezone by using toLocaleString with user's timezone
+        const userTimeString = estDate.toLocaleString('en-US', {
+          timeZone: userTimezone,
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        // Also get it in EST for comparison
+        const estTimeString = estDate.toLocaleString('en-US', {
+          timeZone: 'America/New_York',
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        // Since we created the date as if it's local time, we need to adjust
+        // Create a new date that represents the EST time correctly
+        const actualEstDate = new Date(`${date}T${slot.estTime}:00-05:00`); // EST is UTC-5
+        
+        const actualUserTimeString = actualEstDate.toLocaleString('en-US', {
+          timeZone: userTimezone,
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        return {
+          estTime: slot.estTime,          // Original EST time for backend
+          localTime: actualUserTimeString, // Local time for display
+          estDisplay: slot.estDisplay,    // EST display format
+          localDisplay: formatTimeSlot(actualUserTimeString), // Local display format
+          fullLocalDateTime: actualEstDate // Full datetime for sorting/comparison
+        };
+      } catch (error) {
+        console.warn('Error converting timezone for slot:', slot.estTime, error);
+        // Fallback to EST time if conversion fails
+        return {
+          estTime: slot.estTime,
+          localTime: slot.estTime,
+          estDisplay: slot.estDisplay,
+          localDisplay: slot.estDisplay,
+          fullLocalDateTime: new Date(`${date}T${slot.estTime}:00`)
+        };
+      }
+    }).sort((a, b) => a.fullLocalDateTime - b.fullLocalDateTime); // Sort by local time
+  };
 
-  // Check availability when date changes
+  const [localTimeSlots, setLocalTimeSlots] = useState([]);
+
+  // Update local time slots when date or timezone changes
   useEffect(() => {
-    if (selectedDate) {
+    if (selectedDate && userTimezone) {
+      const slots = generateLocalTimeSlots(selectedDate);
+      setLocalTimeSlots(slots);
+      console.log('Generated local time slots:', slots);
+    }
+  }, [selectedDate, userTimezone]);
+
+  // Check availability when date or local time slots change
+  useEffect(() => {
+    if (selectedDate && localTimeSlots.length > 0) {
       checkAvailability(selectedDate);
     }
-  }, [selectedDate]);
+  }, [selectedDate, localTimeSlots]);
 
   const checkAvailability = async (date) => {
-    if (!userTimezone) {
-      console.warn('Timezone not detected yet');
+    if (!userTimezone || localTimeSlots.length === 0) {
+      console.warn('Timezone not detected yet or slots not generated');
       return;
     }
     
@@ -103,20 +178,26 @@ const AppointmentBooking = () => {
           apt.appointment_date === date && apt.status !== 'cancelled'
         );
         
-        // Extract booked times
-        const bookedTimes = dateAppointments.map(apt => apt.appointment_time);
+        // Extract booked EST times (appointments are stored with EST times)
+        const bookedESTTimes = dateAppointments.map(apt => apt.appointment_time);
         
-        setBookedTimes(bookedTimes);
-        setAvailableTimeSlots(allTimeSlots.filter(time => !bookedTimes.includes(time)));
+        // Filter available local time slots based on booked EST times
+        const availableSlots = localTimeSlots.filter(slot => 
+          !bookedESTTimes.includes(slot.estTime)
+        );
         
-        console.log(`✅ Found ${bookedTimes.length} booked times for ${date}:`, bookedTimes);
+        setBookedTimes(bookedESTTimes);
+        setAvailableTimeSlots(availableSlots);
+        
+        console.log(`✅ Found ${bookedESTTimes.length} booked EST times for ${date}:`, bookedESTTimes);
+        console.log(`✅ Available local slots:`, availableSlots.map(s => `${s.localDisplay} (EST: ${s.estDisplay})`));
       } else {
         console.error('❌ Failed to check availability:', result.error);
-        setAvailableTimeSlots(allTimeSlots); // Fallback to all slots
+        setAvailableTimeSlots(localTimeSlots); // Fallback to all slots
       }
     } catch (error) {
       console.error('❌ Error checking availability:', error);
-      setAvailableTimeSlots(allTimeSlots); // Fallback to all slots
+      setAvailableTimeSlots(localTimeSlots); // Fallback to all slots
     } finally {
       setLoadingAvailability(false);
     }
@@ -127,6 +208,9 @@ const AppointmentBooking = () => {
     setSubmitMessage('');
 
     try {
+      // Find the selected time slot to get both EST and local time info
+      const selectedSlot = localTimeSlots.find(slot => slot.estTime === data.appointment_time);
+      
       // Prepare appointment data for Firebase
       const appointmentData = {
         name: data.name,
@@ -136,7 +220,11 @@ const AppointmentBooking = () => {
         industry: data.industry || '',
         service_interests: data.service_interests || '',
         appointment_date: data.appointment_date,
-        appointment_time: data.appointment_time,
+        appointment_time: data.appointment_time, // This is EST time
+        appointment_time_est: data.appointment_time, // Explicit EST time
+        appointment_time_local: selectedSlot ? selectedSlot.localTime : data.appointment_time, // Local time
+        appointment_time_local_display: selectedSlot ? selectedSlot.localDisplay : formatTimeSlot(data.appointment_time), // Local display
+        appointment_time_est_display: selectedSlot ? selectedSlot.estDisplay : formatTimeSlot(data.appointment_time), // EST display
         message: data.message || '',
         user_timezone: userTimezone
       };
@@ -515,9 +603,14 @@ const AppointmentBooking = () => {
                   </div>
 
                   <div>
-                    <label className="flex items-center space-x-2 text-sm font-medium text-white/80 mb-2">
-                      <Clock className="w-4 h-4" />
-                      <span>Preferred Time *</span>
+                    <label className="flex items-center justify-between text-sm font-medium text-white/80 mb-2">
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4" />
+                        <span>Preferred Time *</span>
+                      </div>
+                      <div className="text-xs text-[#00FFD1]">
+                        Times shown in your local timezone
+                      </div>
                     </label>
                     {loadingAvailability ? (
                       <div className="w-full bg-white/5 border border-white/20 text-white/40 px-4 py-3 rounded-none flex items-center justify-center">
@@ -537,9 +630,9 @@ const AppointmentBooking = () => {
                         disabled={isSubmitting || !selectedDate}
                       >
                         <option value="" className="bg-gray-900 text-white">Select Time</option>
-                        {availableTimeSlots.map((time) => (
-                          <option key={time} value={time} className="bg-gray-900 text-white">
-                            {formatTimeSlot(time)}
+                        {availableTimeSlots.map((slot) => (
+                          <option key={slot.estTime} value={slot.estTime} className="bg-gray-900 text-white" title={`EST: ${slot.estDisplay}`}>
+                            {slot.localDisplay} (EST: {slot.estDisplay})
                           </option>
                         ))}
                       </select>
@@ -551,7 +644,7 @@ const AppointmentBooking = () => {
                     {/* Show booked times info */}
                     {selectedDate && bookedTimes.length > 0 && (
                       <p className="text-white/50 text-xs mt-1">
-                        Unavailable times: {bookedTimes.map(formatTimeSlot).join(', ')}
+                        Unavailable EST times: {bookedTimes.map(formatTimeSlot).join(', ')}
                       </p>
                     )}
                   </div>
