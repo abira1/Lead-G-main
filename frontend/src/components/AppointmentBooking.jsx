@@ -146,9 +146,17 @@ const AppointmentBooking = () => {
   // Update local time slots when date or timezone changes
   useEffect(() => {
     if (selectedDate && userTimezone) {
+      // Check if the selected date is a weekday
+      if (!isWeekday(selectedDate)) {
+        setLocalTimeSlots([]);
+        setAvailableTimeSlots([]);
+        console.log('Weekend selected - no time slots available');
+        return;
+      }
+      
       const slots = generateLocalTimeSlots(selectedDate);
       setLocalTimeSlots(slots);
-      console.log('Generated local time slots:', slots);
+      console.log('Generated local time slots for weekday:', slots);
     }
   }, [selectedDate, userTimezone]);
 
@@ -165,9 +173,17 @@ const AppointmentBooking = () => {
       return;
     }
     
+    // Check if the date is a weekday
+    if (!isWeekday(date)) {
+      setAvailableTimeSlots([]);
+      setBookedTimes([]);
+      console.log('Weekend date - no availability');
+      return;
+    }
+    
     setLoadingAvailability(true);
     try {
-      console.log('🔍 Checking availability for date:', date);
+      console.log('🔍 Checking availability for weekday:', date);
       
       // Get all appointments from Firebase
       const result = await getAppointments();
@@ -208,6 +224,11 @@ const AppointmentBooking = () => {
     setSubmitMessage('');
 
     try {
+      // Check if the selected date is a weekday
+      if (!isWeekday(data.appointment_date)) {
+        throw new Error('Appointments are only available Monday through Friday. Please select a weekday.');
+      }
+
       // Find the selected time slot to get both EST and local time info
       const selectedSlot = localTimeSlots.find(slot => slot.estTime === data.appointment_time);
       
@@ -272,11 +293,23 @@ const AppointmentBooking = () => {
     }
   };
 
+  // Check if a date is a weekday (Monday-Friday)
+  const isWeekday = (dateString) => {
+    const date = new Date(dateString);
+    const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    return dayOfWeek >= 1 && dayOfWeek <= 5; // Monday (1) through Friday (5)
+  };
+
   const handleDateChange = (e) => {
     const date = e.target.value;
+    
+    // Always set the date first to show the weekend message
     setSelectedDate(date);
     setValue('appointment_date', date);
     setValue('appointment_time', ''); // Reset time when date changes
+    
+    // If it's a weekend, the time slots will be automatically cleared
+    // by the useEffect that checks isWeekday
   };
 
   const isFormValid = () => {
@@ -287,7 +320,8 @@ const AppointmentBooking = () => {
            formData.appointment_date &&
            formData.appointment_time &&
            !errors.email &&
-           !errors.phone;
+           !errors.phone &&
+           isWeekday(formData.appointment_date); // Ensure it's a weekday
   };
 
   const getMinDate = () => {
@@ -600,6 +634,14 @@ const AppointmentBooking = () => {
                     {errors.appointment_date && (
                       <p className="text-red-400 text-sm mt-1">{errors.appointment_date.message}</p>
                     )}
+                    {selectedDate && !isWeekday(selectedDate) && (
+                      <p className="text-red-400 text-sm mt-1">
+                        ⚠️ Weekend selected - Please choose a weekday (Monday-Friday)
+                      </p>
+                    )}
+                    <p className="text-[#00FFD1] text-xs mt-1">
+                      📅 Appointments available Monday - Friday only
+                    </p>
                   </div>
 
                   <div>
@@ -617,6 +659,11 @@ const AppointmentBooking = () => {
                         <Loader2 className="w-4 h-4 animate-spin mr-2" />
                         Checking availability...
                       </div>
+                    ) : selectedDate && !isWeekday(selectedDate) ? (
+                      <div className="w-full bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-none flex items-center justify-center">
+                        <AlertCircle className="w-4 h-4 mr-2" />
+                        Weekend selected - No appointments available
+                      </div>
                     ) : (
                       <select
                         {...register('appointment_time', { required: 'Please select a time' })}
@@ -629,7 +676,9 @@ const AppointmentBooking = () => {
                         }}
                         disabled={isSubmitting || !selectedDate}
                       >
-                        <option value="" className="bg-gray-900 text-white">Select Time</option>
+                        <option value="" className="bg-gray-900 text-white">
+                          {selectedDate ? "Select Time" : "First select a date"}
+                        </option>
                         {availableTimeSlots.map((slot) => (
                           <option key={slot.estTime} value={slot.estTime} className="bg-gray-900 text-white" title={`EST: ${slot.estDisplay}`}>
                             {slot.localDisplay} (EST: {slot.estDisplay})
