@@ -1,0 +1,1198 @@
+"""
+Lead G API Server - FastAPI with Firebase Firestore
+A modern, scalable API for Lead Generation services
+"""
+from fastapi import FastAPI, HTTPException, status, Depends, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.staticfiles import StaticFiles
+import logging
+from datetime import datetime, timedelta
+from typing import List, Optional
+import jwt
+import os
+import shutil
+from pathlib import Path
+from zoneinfo import ZoneInfo
+import pytz
+
+# Local imports
+from config import settings
+from database import firebase_db
+from models import (
+    StatusCheck, StatusCheckCreate,
+    ContactForm, ContactFormCreate,
+    Appointment, AppointmentCreate,
+    AdminLoginRequest, AdminLoginResponse,
+    Testimonial, TestimonialCreate,
+    WorkedWithCompany, WorkedWithCompanyCreate,
+    APIResponse
+)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Authentication configuration
+security = HTTPBearer()
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "leadg_admin_secret_key_2024")
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+JWT_EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", "1440"))
+
+# Authorized admin emails
+AUTHORIZED_ADMIN_EMAILS = [
+    "toiral.dev@gmail.com",
+    "mdrudra60@gmail.com"
+]
+
+# Legacy admin for email/password login
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "toiral.dev@gmail.com")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "testadmin")
+
+def convert_local_to_utc(date_str: str, time_str: str, timezone_str: str) -> datetime:
+    """Convert local datetime to UTC datetime"""
+    try:
+        # Parse the date and time
+        local_datetime_str = f"{date_str} {time_str}"
+        naive_datetime = datetime.strptime(local_datetime_str, "%Y-%m-%d %H:%M")
+        
+        # Localize to user's timezone
+        user_tz = pytz.timezone(timezone_str)
+        local_datetime = user_tz.localize(naive_datetime)
+        
+        # Convert to UTC
+        utc_datetime = local_datetime.astimezone(pytz.UTC)
+        
+        return utc_datetime
+    except Exception as e:
+        logger.error(f"Error converting timezone: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid timezone or datetime format: {str(e)}"
+        )
+
+def convert_utc_to_local(utc_datetime_str: str, timezone_str: str) -> tuple:
+    """Convert UTC datetime string to local date and time"""
+    try:
+        # Parse UTC datetime
+        utc_datetime = datetime.fromisoformat(utc_datetime_str.replace('Z', '+00:00'))
+        utc_datetime = utc_datetime.replace(tzinfo=pytz.UTC)
+        
+        # Convert to user's timezone
+        user_tz = pytz.timezone(timezone_str)
+        local_datetime = utc_datetime.astimezone(user_tz)
+        
+        return local_datetime.strftime("%Y-%m-%d"), local_datetime.strftime("%H:%M")
+    except Exception as e:
+        logger.error(f"Error converting from UTC: {e}")
+        return None, None
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    """Create JWT access token"""
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=JWT_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
+    return encoded_jwt
+
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Verify JWT token for admin authentication"""
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None or email not in AUTHORIZED_ADMIN_EMAILS:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        return email
+    except jwt.PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+# Initialize FastAPI app
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    version=settings.VERSION,
+    description="Modern API for Lead Generation services with Firebase backend",
+    docs_url="/docs" if settings.DEBUG else None,
+    redoc_url="/redoc" if settings.DEBUG else None,
+)
+
+# Add CORS middleware - Very permissive for cross-domain access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS if not settings.ENABLE_CORS_ALL_ORIGINS else ["*"],
+    allow_credentials=True,
+    allow_methods=["*"] if settings.ALLOW_ALL_METHODS else ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"] if settings.ALLOW_ALL_HEADERS else ["Authorization", "Content-Type", "Accept", "Origin", "User-Agent", "DNT", "Cache-Control", "X-Mx-ReqToken", "Keep-Alive", "X-Requested-With", "If-Modified-Since"],
+    expose_headers=["*"],
+)
+
+# Add middleware to handle OPTIONS requests and ensure JSON responses
+@app.middleware("http")
+async def ensure_json_response(request, call_next):
+    """Ensure all API responses are JSON formatted"""
+    try:
+        response = await call_next(request)
+        
+        # Handle OPTIONS preflight requests
+        if request.method == "OPTIONS":
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            response.headers["Access-Control-Allow-Methods"] = "*"
+            response.headers["Access-Control-Allow-Headers"] = "*"
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            
+        return response
+    except Exception as e:
+        logger.error(f"Middleware error: {e}")
+        # Always return JSON error responses
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "message": "Internal server error",
+                "detail": str(e)
+            }
+        )
+
+# Mount static files for uploads
+app.mount("/uploads", StaticFiles(directory="/app/backend/uploads"), name="uploads")
+
+# CORS preflight handler
+@app.options("/{path:path}")
+async def options_handler(path: str):
+    """Handle all OPTIONS requests for CORS preflight"""
+    return JSONResponse(
+        content={"message": "CORS preflight handled"},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Credentials": "true",
+        }
+    )
+
+# Health check endpoint
+@app.get("/", response_model=APIResponse)
+async def root():
+    """Root endpoint for health check"""
+    return APIResponse(
+        success=True,
+        message="Lead G API is running successfully",
+        data={
+            "version": settings.VERSION,
+            "environment": settings.ENVIRONMENT,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+    )
+
+@app.get(f"{settings.API_V1_STR}/health", response_model=APIResponse)
+async def health_check():
+    """Detailed health check endpoint"""
+    try:
+        # Test Firebase connection
+        firebase_db.db.collection('health_check').limit(1).get()
+        
+        return APIResponse(
+            success=True,
+            message="All services are healthy",
+            data={
+                "database": "connected",
+                "timestamp": datetime.utcnow().isoformat()
+            }
+        )
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        return JSONResponse(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            content=APIResponse(
+                success=False,
+                message="Service unavailable",
+                data={"error": str(e)}
+            ).dict()
+        )
+
+# Authentication Endpoints
+@app.post(f"{settings.API_V1_STR}/admin/login", response_model=AdminLoginResponse)
+async def admin_login(login_data: AdminLoginRequest):
+    """Admin login endpoint"""
+    try:
+        logger.info(f"Login attempt for email: {login_data.email}")
+        
+        # Verify credentials
+        if login_data.email != ADMIN_EMAIL or login_data.password != ADMIN_PASSWORD:
+            logger.warning(f"Invalid login attempt for: {login_data.email}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password"
+            )
+        
+        # Create access token
+        access_token_expires = timedelta(minutes=JWT_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": login_data.email}, expires_delta=access_token_expires
+        )
+        
+        logger.info(f"Admin login successful: {login_data.email}")
+        response = AdminLoginResponse(
+            access_token=access_token,
+            expires_in=JWT_EXPIRE_MINUTES * 60  # Convert to seconds
+        )
+        logger.info(f"Returning login response: access_token length={len(access_token)}")
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Login failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Login failed"
+        )
+
+@app.post(f"{settings.API_V1_STR}/admin/google-login", response_model=AdminLoginResponse)
+async def admin_google_login(google_data: dict):
+    """Admin Google OAuth login endpoint"""
+    try:
+        email = google_data.get('email')
+        id_token = google_data.get('idToken')
+        
+        if not email or not id_token:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email and ID token are required"
+            )
+        
+        # Verify the email is authorized (in production, verify the Firebase ID token)
+        if email not in AUTHORIZED_ADMIN_EMAILS:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized email address. Only authorized admin emails can access this panel."
+            )
+        
+        # Create access token for our system
+        access_token_expires = timedelta(minutes=JWT_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": email}, expires_delta=access_token_expires
+        )
+        
+        logger.info(f"Admin Google login successful: {email}")
+        return AdminLoginResponse(
+            access_token=access_token,
+            expires_in=JWT_EXPIRE_MINUTES * 60  # Convert to seconds
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Google login failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Google login failed"
+        )
+
+@app.get(f"{settings.API_V1_STR}/admin/verify")
+async def verify_admin_token(current_user: str = Depends(verify_token)):
+    """Verify admin token endpoint"""
+    return APIResponse(
+        success=True,
+        message="Token is valid",
+        data={"email": current_user}
+    )
+
+# Status Check Endpoints
+@app.post(f"{settings.API_V1_STR}/status", response_model=StatusCheck)
+async def create_status_check(status_data: StatusCheckCreate):
+    """Create a new status check entry"""
+    try:
+        status_check = StatusCheck(**status_data.dict())
+        
+        # Save to Firebase
+        doc_ref = firebase_db.get_collection('status_checks').document(status_check.id)
+        doc_ref.set(status_check.dict())
+        
+        logger.info(f"Created status check: {status_check.id}")
+        return status_check
+        
+    except Exception as e:
+        logger.error(f"Failed to create status check: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create status check"
+        )
+
+@app.get(f"{settings.API_V1_STR}/status", response_model=List[StatusCheck])
+async def get_status_checks(limit: int = 100):
+    """Retrieve status checks"""
+    try:
+        docs = firebase_db.get_collection('status_checks').order_by('timestamp', direction='DESCENDING').limit(limit).get()
+        
+        status_checks = []
+        for doc in docs:
+            data = doc.to_dict()
+            status_checks.append(StatusCheck(**data))
+        
+        logger.info(f"Retrieved {len(status_checks)} status checks")
+        return status_checks
+        
+    except Exception as e:
+        logger.error(f"Failed to retrieve status checks: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve status checks"
+        )
+
+# Contact Form Endpoints
+@app.post(f"{settings.API_V1_STR}/contact", response_model=ContactForm)
+async def submit_contact_form(contact_data: ContactFormCreate):
+    """Submit a contact form"""
+    try:
+        contact_form = ContactForm(**contact_data.dict())
+        
+        # Save to Firebase
+        doc_ref = firebase_db.get_collection('contact_forms').document(contact_form.id)
+        doc_ref.set(contact_form.dict())
+        
+        logger.info(f"Contact form submitted: {contact_form.id} by {contact_form.email}")
+        return contact_form
+        
+    except Exception as e:
+        logger.error(f"Failed to submit contact form: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to submit contact form"
+        )
+
+@app.get(f"{settings.API_V1_STR}/contact", response_model=List[ContactForm])
+async def get_contact_forms(limit: int = 100, status_filter: str = None):
+    """Retrieve contact forms (admin endpoint)"""
+    try:
+        query = firebase_db.get_collection('contact_forms').order_by('submitted_at', direction='DESCENDING')
+        
+        if status_filter:
+            query = query.where('status', '==', status_filter)
+            
+        docs = query.limit(limit).get()
+        
+        contact_forms = []
+        for doc in docs:
+            data = doc.to_dict()
+            contact_forms.append(ContactForm(**data))
+        
+        logger.info(f"Retrieved {len(contact_forms)} contact forms")
+        return contact_forms
+        
+    except Exception as e:
+        logger.error(f"Failed to retrieve contact forms: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve contact forms"
+        )
+
+# Appointment Endpoints
+@app.post(f"{settings.API_V1_STR}/appointments", response_model=Appointment)
+async def create_appointment(appointment_data: AppointmentCreate):
+    """Create a new appointment with timezone support (public endpoint - no authentication required)"""
+    try:
+        # Convert local time to UTC
+        utc_datetime = convert_local_to_utc(
+            appointment_data.appointment_date,
+            appointment_data.appointment_time,
+            appointment_data.user_timezone
+        )
+        
+        # Check for overlapping appointments using UTC time
+        # Query existing appointments for the same UTC datetime
+        existing_appointments = firebase_db.get_collection('appointments')\
+            .where('appointment_datetime_utc', '==', utc_datetime.isoformat())\
+            .where('status', 'in', ['pending', 'confirmed'])\
+            .get()
+        
+        if len(existing_appointments) > 0:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="This appointment slot is already booked. Please select a different time."
+            )
+        
+        # Create appointment with timezone info
+        appointment = Appointment(
+            **appointment_data.dict(),
+            appointment_datetime_utc=utc_datetime.isoformat()
+        )
+        
+        # Save to Firebase
+        doc_ref = firebase_db.get_collection('appointments').document(appointment.id)
+        doc_ref.set(appointment.dict())
+        
+        logger.info(f"Created appointment: {appointment.id} for {appointment.email} on {appointment.appointment_date} at {appointment.appointment_time} {appointment.user_timezone} (UTC: {utc_datetime.isoformat()})")
+        return appointment
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to create appointment: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create appointment"
+        )
+
+@app.get(f"{settings.API_V1_STR}/appointments", response_model=List[Appointment])
+async def get_appointments(limit: int = 100, status_filter: str = None, current_user: str = Depends(verify_token)):
+    """Retrieve appointments (admin endpoint - requires authentication)"""
+    try:
+        query = firebase_db.get_collection('appointments').order_by('created_at', direction='DESCENDING')
+        
+        if status_filter:
+            query = query.where('status', '==', status_filter)
+            
+        docs = query.limit(limit).get()
+        
+        appointments = []
+        for doc in docs:
+            data = doc.to_dict()
+            appointments.append(Appointment(**data))
+        
+        logger.info(f"Retrieved {len(appointments)} appointments")
+        return appointments
+        
+    except Exception as e:
+        logger.error(f"Failed to retrieve appointments: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve appointments"
+        )
+
+@app.put(settings.API_V1_STR + "/appointments/{appointment_id}/status")
+async def update_appointment_status(appointment_id: str, status_update: dict, current_user: str = Depends(verify_token)):
+    """Update appointment status (admin endpoint - requires authentication)"""
+    try:
+        new_status = status_update.get('status')
+        if new_status not in ['pending', 'confirmed', 'completed', 'cancelled']:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid status. Must be one of: pending, confirmed, completed, cancelled"
+            )
+        
+        doc_ref = firebase_db.get_collection('appointments').document(appointment_id)
+        doc = doc_ref.get()
+        
+        if not doc.exists:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Appointment not found"
+            )
+        
+        doc_ref.update({'status': new_status})
+        
+        logger.info(f"Updated appointment {appointment_id} status to {new_status}")
+        return {"success": True, "message": "Appointment status updated successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to update appointment status: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update appointment status"
+        )
+
+@app.get(f"{settings.API_V1_STR}/appointments/availability")
+async def check_availability(date: str, timezone: str = "UTC"):
+    """Check appointment availability for a specific date in user's timezone (public endpoint)"""
+    try:
+        # Get all appointments
+        all_appointments = firebase_db.get_collection('appointments')\
+            .where('status', 'in', ['pending', 'confirmed'])\
+            .get()
+        
+        # Filter appointments for the requested date in the user's timezone
+        booked_times = []
+        for doc in all_appointments:
+            appointment_data = doc.to_dict()
+            
+            # Convert UTC datetime to user's timezone
+            utc_datetime_str = appointment_data.get('appointment_datetime_utc')
+            if utc_datetime_str:
+                local_date, local_time = convert_utc_to_local(utc_datetime_str, timezone)
+                
+                # Check if this appointment is on the requested date in user's timezone
+                if local_date == date:
+                    booked_times.append(local_time)
+            else:
+                # Fallback for old appointments without UTC time
+                if appointment_data.get('appointment_date') == date:
+                    booked_times.append(appointment_data.get('appointment_time'))
+        
+        return {
+            "date": date,
+            "timezone": timezone,
+            "booked_times": sorted(list(set(booked_times))),  # Remove duplicates and sort
+            "message": f"Found {len(booked_times)} booked appointments for this date"
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to check availability: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to check availability"
+        )
+
+# Export Endpoints
+@app.get(f"{settings.API_V1_STR}/admin/export/pdf")
+async def export_appointments_pdf(status_filter: str = None, current_user: str = Depends(verify_token)):
+    """Export appointments to PDF (admin endpoint)"""
+    try:
+        from reportlab.lib.pagesizes import letter, A4
+        from reportlab.lib import colors
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.units import inch
+        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+        from reportlab.lib.enums import TA_CENTER, TA_LEFT
+        from io import BytesIO
+        from fastapi.responses import StreamingResponse
+        
+        # Get appointments
+        query = firebase_db.get_collection('appointments').order_by('created_at', direction='DESCENDING')
+        if status_filter:
+            query = query.where('status', '==', status_filter)
+        
+        docs = query.get()
+        appointments = []
+        for doc in docs:
+            data = doc.to_dict()
+            appointments.append(Appointment(**data))
+        
+        # Create PDF
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=A4)
+        styles = getSampleStyleSheet()
+        
+        # Title style
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=24,
+            spaceAfter=30,
+            alignment=TA_CENTER,
+            textColor=colors.HexColor('#00FFD1')
+        )
+        
+        # Build content
+        story = []
+        
+        # Title
+        title_text = "Lead G - Appointments Report"
+        if status_filter:
+            title_text += f" ({status_filter.capitalize()})"
+        story.append(Paragraph(title_text, title_style))
+        
+        # Date
+        story.append(Paragraph(f"Generated on: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", styles['Normal']))
+        story.append(Spacer(1, 20))
+        
+        # Summary
+        total = len(appointments)
+        summary_data = [
+            ['Status', 'Count'],
+            ['Total', str(total)],
+            ['Pending', str(len([a for a in appointments if a.status == 'pending']))],
+            ['Confirmed', str(len([a for a in appointments if a.status == 'confirmed']))],
+            ['Completed', str(len([a for a in appointments if a.status == 'completed']))],
+            ['Cancelled', str(len([a for a in appointments if a.status == 'cancelled']))]
+        ]
+        
+        summary_table = Table(summary_data, colWidths=[2*inch, 1*inch])
+        summary_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#00FFD1')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+        story.append(summary_table)
+        story.append(Spacer(1, 30))
+        
+        # Appointments table
+        if appointments:
+            story.append(Paragraph("Appointment Details", styles['Heading2']))
+            story.append(Spacer(1, 12))
+            
+            # Table data
+            table_data = [['Name', 'Email', 'Phone', 'Business', 'Date', 'Time', 'Status']]
+            
+            for appointment in appointments:
+                table_data.append([
+                    appointment.name,
+                    appointment.email,
+                    appointment.phone,
+                    appointment.business or 'N/A',
+                    appointment.appointment_date,
+                    appointment.appointment_time,
+                    appointment.status.capitalize()
+                ])
+            
+            appointments_table = Table(table_data, colWidths=[1.2*inch, 1.5*inch, 1*inch, 1.2*inch, 0.8*inch, 0.6*inch, 0.7*inch])
+            appointments_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#333333')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('FONTSIZE', (0, 1), (-1, -1), 8),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ]))
+            story.append(appointments_table)
+        
+        # Build PDF
+        doc.build(story)
+        buffer.seek(0)
+        
+        filename = f"appointments_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        
+        return StreamingResponse(
+            BytesIO(buffer.read()),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to export PDF: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to export PDF"
+        )
+
+@app.get(f"{settings.API_V1_STR}/admin/export/excel")
+async def export_appointments_excel(status_filter: str = None, current_user: str = Depends(verify_token)):
+    """Export appointments to Excel (admin endpoint)"""
+    try:
+        import xlsxwriter
+        from io import BytesIO
+        from fastapi.responses import StreamingResponse
+        
+        # Get appointments
+        query = firebase_db.get_collection('appointments').order_by('created_at', direction='DESCENDING')
+        if status_filter:
+            query = query.where('status', '==', status_filter)
+        
+        docs = query.get()
+        appointments = []
+        for doc in docs:
+            data = doc.to_dict()
+            appointments.append(Appointment(**data))
+        
+        # Create Excel file
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        
+        # Create formats
+        header_format = workbook.add_format({
+            'bold': True,
+            'font_color': 'white',
+            'bg_color': '#00FFD1',
+            'border': 1,
+            'align': 'center',
+            'valign': 'vcenter'
+        })
+        
+        cell_format = workbook.add_format({
+            'border': 1,
+            'align': 'left',
+            'valign': 'vcenter'
+        })
+        
+        status_formats = {
+            'pending': workbook.add_format({'bg_color': '#FFF2CC', 'border': 1, 'align': 'center'}),
+            'confirmed': workbook.add_format({'bg_color': '#D5E8D4', 'border': 1, 'align': 'center'}),
+            'completed': workbook.add_format({'bg_color': '#DAE8FC', 'border': 1, 'align': 'center'}),
+            'cancelled': workbook.add_format({'bg_color': '#F8CECC', 'border': 1, 'align': 'center'})
+        }
+        
+        # Summary worksheet  
+        summary_sheet = workbook.add_worksheet('Summary')
+        summary_sheet.write('A1', 'Lead G - Appointments Summary', header_format)
+        summary_sheet.merge_range('A1:G1', 'Lead G - Appointments Summary', header_format)
+        
+        summary_sheet.write('A3', 'Total Appointments:', cell_format)
+        summary_sheet.write('B3', len(appointments), cell_format)
+        
+        summary_sheet.write('A4', 'Pending:', cell_format)
+        summary_sheet.write('B4', len([a for a in appointments if a.status == 'pending']), cell_format)
+        
+        summary_sheet.write('A5', 'Confirmed:', cell_format)
+        summary_sheet.write('B5', len([a for a in appointments if a.status == 'confirmed']), cell_format)
+        
+        summary_sheet.write('A6', 'Completed:', cell_format)
+        summary_sheet.write('B6', len([a for a in appointments if a.status == 'completed']), cell_format)
+        
+        summary_sheet.write('A7', 'Cancelled:', cell_format)
+        summary_sheet.write('B7', len([a for a in appointments if a.status == 'cancelled']), cell_format)
+        
+        summary_sheet.write('A9', f'Generated on: {datetime.now().strftime("%B %d, %Y at %I:%M %p")}', cell_format)
+        
+        # Appointments worksheet
+        appointments_sheet = workbook.add_worksheet('Appointments')
+        
+        # Headers
+        headers = ['ID', 'Name', 'Email', 'Phone', 'Business', 'Industry', 'Service Interests', 
+                  'Appointment Date', 'Appointment Time', 'Status', 'Message', 'Created At']
+        
+        for col, header in enumerate(headers):
+            appointments_sheet.write(0, col, header, header_format)
+        
+        # Data rows
+        for row, appointment in enumerate(appointments, 1):
+            appointments_sheet.write(row, 0, appointment.id, cell_format)
+            appointments_sheet.write(row, 1, appointment.name, cell_format)
+            appointments_sheet.write(row, 2, appointment.email, cell_format)
+            appointments_sheet.write(row, 3, appointment.phone, cell_format)
+            appointments_sheet.write(row, 4, appointment.business or '', cell_format)
+            appointments_sheet.write(row, 5, appointment.industry or '', cell_format)
+            appointments_sheet.write(row, 6, appointment.service_interests or '', cell_format)
+            appointments_sheet.write(row, 7, appointment.appointment_date, cell_format)
+            appointments_sheet.write(row, 8, appointment.appointment_time, cell_format)
+            appointments_sheet.write(row, 9, appointment.status.capitalize(), status_formats.get(appointment.status, cell_format))
+            appointments_sheet.write(row, 10, appointment.message or '', cell_format)
+            appointments_sheet.write(row, 11, appointment.created_at.strftime('%Y-%m-%d %H:%M:%S'), cell_format)
+        
+        # Adjust column widths
+        appointments_sheet.set_column('A:A', 20)  # ID
+        appointments_sheet.set_column('B:B', 20)  # Name
+        appointments_sheet.set_column('C:C', 25)  # Email
+        appointments_sheet.set_column('D:D', 15)  # Phone
+        appointments_sheet.set_column('E:E', 20)  # Business
+        appointments_sheet.set_column('F:F', 15)  # Industry
+        appointments_sheet.set_column('G:G', 20)  # Service Interests
+        appointments_sheet.set_column('H:H', 15)  # Date
+        appointments_sheet.set_column('I:I', 12)  # Time
+        appointments_sheet.set_column('J:J', 12)  # Status
+        appointments_sheet.set_column('K:K', 30)  # Message
+        appointments_sheet.set_column('L:L', 20)  # Created At
+        
+        workbook.close()
+        output.seek(0)
+        
+        filename = f"appointments_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        
+        return StreamingResponse(
+            BytesIO(output.read()),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to export Excel: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to export Excel"
+        )
+
+# Testimonials Endpoints
+
+# Create uploads directory for logos
+UPLOAD_DIR = Path("/app/backend/uploads/logos")
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+@app.post(f"{settings.API_V1_STR}/testimonials/upload-logo")
+async def upload_logo(file: UploadFile = File(...), current_user: str = Depends(verify_token)):
+    """Upload a company logo (admin endpoint)"""
+    try:
+        # Validate file type
+        allowed_types = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp", "image/svg+xml"]
+        if file.content_type not in allowed_types:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid file type. Only images are allowed (JPEG, PNG, GIF, WebP, SVG)."
+            )
+        
+        # Generate unique filename
+        file_extension = file.filename.split(".")[-1]
+        unique_filename = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}"
+        file_path = UPLOAD_DIR / unique_filename
+        
+        # Save file
+        with file_path.open("wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        # Return the URL path
+        logo_url = f"/uploads/logos/{unique_filename}"
+        
+        logger.info(f"Logo uploaded: {unique_filename}")
+        return {
+            "success": True,
+            "logo_url": logo_url,
+            "filename": unique_filename
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to upload logo: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to upload logo"
+        )
+
+@app.post(f"{settings.API_V1_STR}/testimonials", response_model=Testimonial)
+async def create_testimonial(testimonial_data: TestimonialCreate, current_user: str = Depends(verify_token)):
+    """Create a new testimonial (admin endpoint)"""
+    try:
+        testimonial = Testimonial(**testimonial_data.dict())
+        
+        # Save to Firebase
+        doc_ref = firebase_db.get_collection('testimonials').document(testimonial.id)
+        doc_ref.set(testimonial.dict())
+        
+        logger.info(f"Created testimonial: {testimonial.id} for {testimonial.company_name}")
+        return testimonial
+        
+    except Exception as e:
+        logger.error(f"Failed to create testimonial: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create testimonial"
+        )
+
+@app.get(f"{settings.API_V1_STR}/testimonials", response_model=List[Testimonial])
+async def get_testimonials(limit: int = 100):
+    """Retrieve all testimonials (public endpoint)"""
+    try:
+        docs = firebase_db.get_collection('testimonials').order_by('created_at', direction='DESCENDING').limit(limit).get()
+        
+        testimonials = []
+        for doc in docs:
+            data = doc.to_dict()
+            testimonials.append(Testimonial(**data))
+        
+        logger.info(f"Retrieved {len(testimonials)} testimonials")
+        return testimonials
+        
+    except Exception as e:
+        logger.error(f"Failed to retrieve testimonials: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve testimonials"
+        )
+
+@app.put(settings.API_V1_STR + "/testimonials/{testimonial_id}", response_model=Testimonial)
+async def update_testimonial(testimonial_id: str, testimonial_data: TestimonialCreate, current_user: str = Depends(verify_token)):
+    """Update a testimonial (admin endpoint)"""
+    try:
+        doc_ref = firebase_db.get_collection('testimonials').document(testimonial_id)
+        doc = doc_ref.get()
+        
+        if not doc.exists:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Testimonial not found"
+            )
+        
+        # Get existing data to preserve id and created_at
+        existing_data = doc.to_dict()
+        
+        # Update with new data
+        updated_testimonial = Testimonial(
+            id=existing_data['id'],
+            created_at=existing_data['created_at'],
+            **testimonial_data.dict()
+        )
+        
+        doc_ref.update(updated_testimonial.dict())
+        
+        logger.info(f"Updated testimonial: {testimonial_id}")
+        return updated_testimonial
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to update testimonial: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update testimonial"
+        )
+
+@app.delete(settings.API_V1_STR + "/testimonials/{testimonial_id}")
+async def delete_testimonial(testimonial_id: str, current_user: str = Depends(verify_token)):
+    """Delete a testimonial (admin endpoint)"""
+    try:
+        doc_ref = firebase_db.get_collection('testimonials').document(testimonial_id)
+        doc = doc_ref.get()
+        
+        if not doc.exists:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Testimonial not found"
+            )
+        
+        doc_ref.delete()
+        
+        logger.info(f"Deleted testimonial: {testimonial_id}")
+        return {
+            "success": True,
+            "message": "Testimonial deleted successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to delete testimonial: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete testimonial"
+        )
+
+# Worked With Companies Endpoints
+
+@app.post(f"{settings.API_V1_STR}/worked-with", response_model=WorkedWithCompany)
+async def create_worked_with_company(company_data: WorkedWithCompanyCreate, current_user: str = Depends(verify_token)):
+    """Create a new worked with company (admin endpoint)"""
+    try:
+        company = WorkedWithCompany(**company_data.dict())
+        
+        # Save to Firebase
+        doc_ref = firebase_db.get_collection('worked_with_companies').document(company.id)
+        doc_ref.set(company.dict())
+        
+        logger.info(f"Created worked with company: {company.id} for {company.company_name}")
+        return company
+        
+    except Exception as e:
+        logger.error(f"Failed to create worked with company: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create worked with company"
+        )
+
+@app.get(f"{settings.API_V1_STR}/worked-with", response_model=List[WorkedWithCompany])
+async def get_worked_with_companies(limit: int = 100):
+    """Retrieve all worked with companies (public endpoint)"""
+    try:
+        docs = firebase_db.get_collection('worked_with_companies').order_by('display_order', direction='ASCENDING').order_by('created_at', direction='DESCENDING').limit(limit).get()
+        
+        companies = []
+        for doc in docs:
+            data = doc.to_dict()
+            companies.append(WorkedWithCompany(**data))
+        
+        logger.info(f"Retrieved {len(companies)} worked with companies")
+        return companies
+        
+    except Exception as e:
+        logger.error(f"Failed to retrieve worked with companies: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve worked with companies"
+        )
+
+@app.put(settings.API_V1_STR + "/worked-with/{company_id}", response_model=WorkedWithCompany)
+async def update_worked_with_company(company_id: str, company_data: WorkedWithCompanyCreate, current_user: str = Depends(verify_token)):
+    """Update a worked with company (admin endpoint)"""
+    try:
+        doc_ref = firebase_db.get_collection('worked_with_companies').document(company_id)
+        doc = doc_ref.get()
+        
+        if not doc.exists:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Worked with company not found"
+            )
+        
+        # Get existing data to preserve id and created_at
+        existing_data = doc.to_dict()
+        
+        # Update with new data
+        updated_company = WorkedWithCompany(
+            id=existing_data['id'],
+            created_at=existing_data['created_at'],
+            **company_data.dict()
+        )
+        
+        doc_ref.update(updated_company.dict())
+        
+        logger.info(f"Updated worked with company: {company_id}")
+        return updated_company
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to update worked with company: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update worked with company"
+        )
+
+@app.delete(settings.API_V1_STR + "/worked-with/{company_id}")
+async def delete_worked_with_company(company_id: str, current_user: str = Depends(verify_token)):
+    """Delete a worked with company (admin endpoint)"""
+    try:
+        doc_ref = firebase_db.get_collection('worked_with_companies').document(company_id)
+        doc = doc_ref.get()
+        
+        if not doc.exists:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Worked with company not found"
+            )
+        
+        doc_ref.delete()
+        
+        logger.info(f"Deleted worked with company: {company_id}")
+        return {
+            "success": True,
+            "message": "Worked with company deleted successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to delete worked with company: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete worked with company"
+        )
+
+# Seed Data Endpoint (Development Only)
+@app.post(f"{settings.API_V1_STR}/admin/seed-data")
+async def seed_database_data(current_user: str = Depends(verify_token)):
+    """Seed the database with demo data (admin endpoint)"""
+    try:
+        # Demo testimonials
+        demo_testimonials = [
+            {
+                "company_name": "TechStart Inc.",
+                "author": "Sarah Johnson - CEO & Founder",
+                "testimonial": "LeadG transformed our lead generation completely. Within 3 months, we saw a 250% increase in qualified leads. Their telemarketing team is professional and truly understands our industry.",
+                "logo_url": "https://logo.clearbit.com/techstars.com"
+            },
+            {
+                "company_name": "GreenEnergy Solutions",
+                "author": "Michael Rodriguez - VP of Sales",
+                "testimonial": "The government contracting expertise LeadG provided was exceptional. They helped us secure $2.5M in federal contracts. Their team knows the ins and outs of the procurement process.",
+                "logo_url": "https://logo.clearbit.com/greenenergysolutions.com"
+            },
+            {
+                "company_name": "PropertyMax Realty",
+                "author": "Emily Chen - Director of Marketing",
+                "testimonial": "Our real estate leads increased by 180% after partnering with LeadG. Their social media marketing and targeted telemarketing campaigns generated high-quality prospects consistently.",
+                "logo_url": "https://logo.clearbit.com/remax.com"
+            },
+            {
+                "company_name": "FinanceFirst Capital",
+                "author": "David Thompson - Managing Partner",
+                "testimonial": "LeadG's hard money lending lead generation service is outstanding. They understand our target market and consistently deliver qualified borrowers. ROI has been phenomenal.",
+                "logo_url": "https://logo.clearbit.com/capitalfirst.com"
+            },
+            {
+                "company_name": "SolarTech Innovations",
+                "author": "Lisa Martinez - Business Development Manager",
+                "testimonial": "Working with LeadG has been a game-changer for our solar installation business. Their appointment setting service book 40+ qualified meetings monthly. Highly recommended!",
+                "logo_url": "https://logo.clearbit.com/solarcity.com"
+            }
+        ]
+        
+        # Demo companies
+        demo_companies = [
+            {"company_name": "Microsoft", "logo_url": "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", "website_url": "https://www.microsoft.com", "display_order": 1},
+            {"company_name": "Apple", "logo_url": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg", "website_url": "https://www.apple.com", "display_order": 2},
+            {"company_name": "Google", "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", "website_url": "https://www.google.com", "display_order": 3},
+            {"company_name": "Amazon", "logo_url": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", "website_url": "https://www.amazon.com", "display_order": 4},
+            {"company_name": "Tesla", "logo_url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg", "website_url": "https://www.tesla.com", "display_order": 5},
+            {"company_name": "Netflix", "logo_url": "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg", "website_url": "https://www.netflix.com", "display_order": 6},
+            {"company_name": "Meta", "logo_url": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg", "website_url": "https://www.meta.com", "display_order": 7},
+            {"company_name": "Salesforce", "logo_url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg", "website_url": "https://www.salesforce.com", "display_order": 8},
+            {"company_name": "Adobe", "logo_url": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Adobe_Corporate_Logo.svg", "website_url": "https://www.adobe.com", "display_order": 9},
+            {"company_name": "IBM", "logo_url": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg", "website_url": "https://www.ibm.com", "display_order": 10}
+        ]
+        
+        # Seed testimonials
+        testimonials_added = 0
+        for testimonial_data in demo_testimonials:
+            testimonial = Testimonial(**testimonial_data)
+            doc_ref = firebase_db.get_collection('testimonials').document(testimonial.id)
+            doc_ref.set(testimonial.dict())
+            testimonials_added += 1
+        
+        # Seed companies
+        companies_added = 0
+        for company_data in demo_companies:
+            company = WorkedWithCompany(**company_data)
+            doc_ref = firebase_db.get_collection('worked_with_companies').document(company.id)
+            doc_ref.set(company.dict())
+            companies_added += 1
+        
+        logger.info(f"Seeded {testimonials_added} testimonials and {companies_added} companies")
+        
+        return {
+            "success": True,
+            "message": "Database seeded successfully",
+            "data": {
+                "testimonials_added": testimonials_added,
+                "companies_added": companies_added
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to seed database: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to seed database"
+        )
+
+# Exception handlers
+@app.exception_handler(404)
+async def not_found_handler(request, exc):
+    return JSONResponse(
+        status_code=404,
+        content=APIResponse(
+            success=False,
+            message="Endpoint not found"
+        ).dict()
+    )
+
+@app.exception_handler(500)
+async def internal_error_handler(request, exc):
+    logger.error(f"Internal server error: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content=APIResponse(
+            success=False,
+            message="Internal server error"
+        ).dict()
+    )
+
+# Startup event
+@app.on_event("startup")
+async def startup_event():
+    """Initialize services on startup"""
+    logger.info(f"Starting {settings.PROJECT_NAME} v{settings.VERSION}")
+    logger.info(f"Environment: {settings.ENVIRONMENT}")
+    logger.info(f"Debug mode: {settings.DEBUG}")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "server:app",
+        host="0.0.0.0",
+        port=8001,
+        reload=settings.DEBUG,
+        log_level="info"
+    )

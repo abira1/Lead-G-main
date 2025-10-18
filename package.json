@@ -1,0 +1,51 @@
+{
+  "name": "lead-g-platform",
+  "version": "1.0.0",
+  "description": "Modern Lead Generation Platform with React and FastAPI",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "./start.sh",
+    "start:windows": "start.bat",
+    "setup": "npm run setup:backend && npm run setup:frontend",
+    "setup:backend": "cd backend && python -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
+    "setup:frontend": "cd frontend && yarn install",
+    "dev:backend": "cd backend && source venv/bin/activate && python server.py",
+    "dev:frontend": "cd frontend && yarn start",
+    "build": "cd frontend && yarn build",
+    "test": "cd frontend && yarn test",
+    "lint": "cd frontend && yarn lint",
+    "lint:fix": "cd frontend && yarn lint:fix",
+    "format": "cd frontend && yarn format",
+    "clean": "rm -rf backend/venv frontend/node_modules",
+    "install:all": "npm run setup"
+  },
+  "keywords": [
+    "lead-generation",
+    "react",
+    "fastapi",
+    "firebase",
+    "python",
+    "javascript",
+    "tailwindcss",
+    "business",
+    "saas"
+  ],
+  "author": "Toiral Web Development",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "python": ">=3.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/lead-g-platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/lead-g-platform/issues"
+  },
+  "homepage": "https://github.com/yourusername/lead-g-platform#readme",
+  "dependencies": {
+    "firebase": "^12.4.0"
+  }
+}

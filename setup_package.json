@@ -1,0 +1,13 @@
+{
+  "name": "firebase-admin-setup",
+  "version": "1.0.0",
+  "description": "Setup script for Firebase admin users",
+  "main": "setup_admin_users.js",
+  "type": "module",
+  "scripts": {
+    "setup-admins": "node setup_admin_users.js"
+  },
+  "dependencies": {
+    "firebase": "^10.0.0"
+  }
+}

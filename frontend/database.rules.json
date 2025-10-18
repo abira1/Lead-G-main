@@ -1,0 +1,36 @@
+{
+  "rules": {
+    "appointments": {
+      ".read": "auth != null",
+      ".write": true,
+      "$appointmentId": {
+        ".validate": "newData.hasChildren(['id', 'name', 'email', 'phone', 'appointment_date', 'appointment_time', 'status', 'created_at'])"
+      }
+    },
+    "contact_forms": {
+      ".read": "auth != null", 
+      ".write": true,
+      "$contactId": {
+        ".validate": "newData.hasChildren(['id', 'name', 'email', 'message', 'submitted_at'])"
+      }
+    },
+    "testimonials": {
+      ".read": true,
+      ".write": "auth != null",
+      "$testimonialId": {
+        ".validate": "newData.hasChildren(['id', 'client_name', 'company', 'testimonial_text'])"
+      }
+    },
+    "worked_with_companies": {
+      ".read": true,
+      ".write": "auth != null",
+      "$companyId": {
+        ".validate": "newData.hasChildren(['id', 'company_name'])"
+      }
+    },
+    "admin_users": {
+      ".read": "auth != null",
+      ".write": true
+    }
+  }
+}

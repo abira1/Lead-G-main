@@ -1,0 +1,2 @@
+# Protect config directory
+Deny from all

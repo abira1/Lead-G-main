@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Environment Test</title>
+</head>
+<body>
+    <h1>Environment Variable Test</h1>
+    <div id="result"></div>
+    <script>
+        console.log('All env vars:', process.env);
+        console.log('Backend URL from env:', process.env.REACT_APP_BACKEND_URL);
+        
+        fetch('/static/js/bundle.js')
+            .then(response => response.text())
+            .then(text => {
+                const matches = text.match(/localhost:8001/g);
+                document.getElementById('result').innerHTML = `
+                    <p>Frontend environment check:</p>
+                    <p>Backend URL occurrences in bundle: ${matches ? matches.length : 0}</p>
+                    <p>Environment available: ${typeof process !== 'undefined' ? 'Yes' : 'No'}</p>
+                `;
+            });
+    </script>
+</body>
+</html>

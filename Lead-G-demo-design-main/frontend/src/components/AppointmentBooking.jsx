@@ -1,0 +1,527 @@
+import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { Calendar, Clock, Send, CheckCircle, AlertCircle, Loader2, User, Mail, Phone, Building, Briefcase, Target } from 'lucide-react';
+import { Button } from './ui/button';
+import ScrollReveal from './ScrollReveal';
+import GlassBox from './GlassBox';
+import apiService from '../services/api';
+
+const AppointmentBooking = () => {
+  const [submitStatus, setSubmitStatus] = useState('idle'); // idle, loading, success, error
+  const [submitMessage, setSubmitMessage] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [bookedTimes, setBookedTimes] = useState([]);
+  const [loadingAvailability, setLoadingAvailability] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    watch,
+    setValue
+  } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      business: '',
+      industry: '',
+      service_interests: '',
+      appointment_date: '',
+      appointment_time: '',
+      message: ''
+    }
+  });
+
+  // Generate time slots (9 AM to 6 PM, 30-minute intervals)
+  const generateTimeSlots = () => {
+    const slots = [];
+    for (let hour = 9; hour < 18; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        slots.push(time);
+      }
+    }
+    return slots;
+  };
+
+  const allTimeSlots = generateTimeSlots();
+
+  // Check availability when date changes
+  useEffect(() => {
+    if (selectedDate) {
+      checkAvailability(selectedDate);
+    }
+  }, [selectedDate]);
+
+  const checkAvailability = async (date) => {
+    setLoadingAvailability(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/appointments/availability?date=${date}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setBookedTimes(data.booked_times || []);
+        setAvailableTimeSlots(allTimeSlots.filter(time => !data.booked_times?.includes(time)));
+      } else {
+        console.error('Failed to check availability:', data);
+        setAvailableTimeSlots(allTimeSlots); // Fallback to all slots
+      }
+    } catch (error) {
+      console.error('Error checking availability:', error);
+      setAvailableTimeSlots(allTimeSlots); // Fallback to all slots
+    } finally {
+      setLoadingAvailability(false);
+    }
+  };
+
+  const onSubmit = async (data) => {
+    setSubmitStatus('loading');
+    setSubmitMessage('');
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/appointments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setSubmitMessage('Your appointment has been booked successfully! We\'ll send you a confirmation email shortly.');
+        reset();
+        setSelectedDate('');
+        setAvailableTimeSlots([]);
+        setBookedTimes([]);
+        
+        // Reset status after 1 hour (3600000 milliseconds)
+        setTimeout(() => {
+          setSubmitStatus('idle');
+          setSubmitMessage('');
+        }, 3600000);
+      } else {
+        throw new Error(result.detail || 'Failed to book appointment');
+      }
+    } catch (error) {
+      console.error('Appointment booking error:', error);
+      setSubmitStatus('error');
+      setSubmitMessage(
+        error.message || 'Sorry, there was an error booking your appointment. Please try again.'
+      );
+      
+      // Reset error status after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus('idle');
+        setSubmitMessage('');
+      }, 5000);
+    }
+  };
+
+  const handleDateChange = (e) => {
+    const date = e.target.value;
+    setSelectedDate(date);
+    setValue('appointment_date', date);
+    setValue('appointment_time', ''); // Reset time when date changes
+  };
+
+  const isFormValid = () => {
+    const formData = watch();
+    return formData.name && 
+           formData.email && 
+           formData.phone &&
+           formData.appointment_date &&
+           formData.appointment_time &&
+           !errors.email &&
+           !errors.phone;
+  };
+
+  const getMinDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
+  const getMaxDate = () => {
+    const maxDate = new Date();
+    maxDate.setMonth(maxDate.getMonth() + 3); // 3 months from now
+    return maxDate.toISOString().split('T')[0];
+  };
+
+  const formatTimeSlot = (time) => {
+    const [hour, minute] = time.split(':');
+    const hourInt = parseInt(hour);
+    const period = hourInt >= 12 ? 'PM' : 'AM';
+    const displayHour = hourInt > 12 ? hourInt - 12 : hourInt === 0 ? 12 : hourInt;
+    return `${displayHour}:${minute} ${period}`;
+  };
+
+  const getSubmitButtonContent = () => {
+    switch (submitStatus) {
+      case 'loading':
+        return (
+          <>
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span>Booking...</span>
+          </>
+        );
+      case 'success':
+        return (
+          <>
+            <CheckCircle className="w-5 h-5" />
+            <span>Booked!</span>
+          </>
+        );
+      case 'error':
+        return (
+          <>
+            <AlertCircle className="w-5 h-5" />
+            <span>Try Again</span>
+          </>
+        );
+      default:
+        return (
+          <>
+            <Send className="w-5 h-5" />
+            <span>Book Appointment</span>
+          </>
+        );
+    }
+  };
+
+  const getSubmitButtonClass = () => {
+    const baseClass = "w-full flex items-center justify-center space-x-2 px-8 py-4 text-lg font-medium transition-all duration-400 rounded-none";
+    
+    switch (submitStatus) {
+      case 'loading':
+        return `${baseClass} bg-gray-500 text-white cursor-not-allowed`;
+      case 'success':
+        return `${baseClass} bg-green-500 text-white`;
+      case 'error':
+        return `${baseClass} bg-red-500 text-white hover:bg-red-600`;
+      default:
+        return `${baseClass} bg-[#00FFD1] text-black hover:bg-[#00FFD1]/10 hover:text-[#00FFD1] border-none ${
+          !isFormValid() ? 'opacity-50 cursor-not-allowed' : ''
+        }`;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-black pt-24 pb-16 relative">
+      <div className="container mx-auto px-6 lg:px-16">
+        
+        {/* Header */}
+        <ScrollReveal delay={0.2}>
+          <div className="text-center mb-16">
+            <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
+              Book Your <span className="text-[#00FFD1]">Appointment</span>
+            </h1>
+            <p className="text-lg text-white/70 max-w-3xl mx-auto leading-relaxed">
+              Schedule a consultation with our lead generation experts. 
+              Choose your preferred date and time, and we'll help you grow your business.
+            </p>
+          </div>
+        </ScrollReveal>
+
+
+
+        {/* Appointment Form */}
+        <div className="max-w-4xl mx-auto">
+          <ScrollReveal delay={0.4}>
+            <GlassBox 
+              className="p-8 lg:p-12"
+              blur={20}
+              opacity={0.1}
+            >
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-white mb-4">Schedule Your Consultation</h2>
+                <p className="text-white/60">
+                  Fill out the form below to book your appointment. All fields marked with * are required.
+                </p>
+              </div>
+
+              {/* Success Message - Replaces Form */}
+              {submitStatus === 'success' ? (
+                <div className="text-center py-16">
+                  <ScrollReveal delay={0.1}>
+                    <div className="mb-8">
+                      <CheckCircle className="w-20 h-20 text-[#00FFD1] mx-auto mb-6" />
+                      <h2 className="text-4xl font-bold text-white mb-6">
+                        Appointment <span className="text-[#00FFD1]">Booked!</span>
+                      </h2>
+                      <p className="text-xl text-white/80 leading-relaxed max-w-2xl mx-auto mb-8">
+                        Your appointment has been booked successfully! We'll send you a confirmation email shortly.
+                      </p>
+                    </div>
+                    <div className="space-y-4">
+                      <Button
+                        onClick={() => {
+                          setSubmitStatus('idle');
+                          setSubmitMessage('');
+                        }}
+                        className="bg-[#00FFD1] text-black hover:bg-[#00FFD1]/90 px-8 py-4 rounded-none font-medium transition-all duration-300 text-lg"
+                      >
+                        Book Another Appointment
+                      </Button>
+                      <div className="text-white/60 text-sm">
+                        This message will automatically disappear in 1 hour
+                      </div>
+                    </div>
+                  </ScrollReveal>
+                </div>
+              ) : (
+                <>
+                  {/* Status Message (for errors only) */}
+                  {submitMessage && submitStatus === 'error' && (
+                    <div className="mb-6 p-4 rounded-lg border bg-red-500/10 border-red-500/20 text-red-400">
+                      <div className="flex items-center space-x-2">
+                        <AlertCircle className="w-5 h-5" />
+                        <span className="text-sm font-medium">{submitMessage}</span>
+                      </div>
+                    </div>
+                  )}
+
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                
+                {/* Personal Information */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="flex items-center space-x-2 text-sm font-medium text-white/80 mb-2">
+                      <User className="w-4 h-4" />
+                      <span>Full Name *</span>
+                    </label>
+                    <input
+                      {...register('name', { 
+                        required: 'Full name is required',
+                        minLength: { value: 2, message: 'Name must be at least 2 characters' }
+                      })}
+                      type="text"
+                      className="w-full bg-white/5 border border-white/20 text-white placeholder-white/40 px-4 py-3 focus:outline-none focus:border-[#00FFD1] focus:bg-white/10 transition-all duration-300 rounded-none"
+                      placeholder="John Doe"
+                      disabled={isSubmitting}
+                    />
+                    {errors.name && (
+                      <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="flex items-center space-x-2 text-sm font-medium text-white/80 mb-2">
+                      <Mail className="w-4 h-4" />
+                      <span>Email Address *</span>
+                    </label>
+                    <input
+                      {...register('email', { 
+                        required: 'Email is required',
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: 'Please enter a valid email address'
+                        }
+                      })}
+                      type="email"
+                      className="w-full bg-white/5 border border-white/20 text-white placeholder-white/40 px-4 py-3 focus:outline-none focus:border-[#00FFD1] focus:bg-white/10 transition-all duration-300 rounded-none"
+                      placeholder="john@company.com"
+                      disabled={isSubmitting}
+                    />
+                    {errors.email && (
+                      <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="flex items-center space-x-2 text-sm font-medium text-white/80 mb-2">
+                    <Phone className="w-4 h-4" />
+                    <span>Phone Number *</span>
+                  </label>
+                  <input
+                    {...register('phone', { 
+                      required: 'Phone number is required',
+                      pattern: {
+                        value: /^[\+]?[1-9][\d]{0,15}$/,
+                        message: 'Please enter a valid phone number'
+                      }
+                    })}
+                    type="tel"
+                    className="w-full bg-white/5 border border-white/20 text-white placeholder-white/40 px-4 py-3 focus:outline-none focus:border-[#00FFD1] focus:bg-white/10 transition-all duration-300 rounded-none"
+                    placeholder="+1 (555) 123-4567"
+                    disabled={isSubmitting}
+                  />
+                  {errors.phone && (
+                    <p className="text-red-400 text-sm mt-1">{errors.phone.message}</p>
+                  )}
+                </div>
+
+                {/* Business Information */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="flex items-center space-x-2 text-sm font-medium text-white/80 mb-2">
+                      <Building className="w-4 h-4" />
+                      <span>Business/Company</span>
+                    </label>
+                    <input
+                      {...register('business')}
+                      type="text"
+                      className="w-full bg-white/5 border border-white/20 text-white placeholder-white/40 px-4 py-3 focus:outline-none focus:border-[#00FFD1] focus:bg-white/10 transition-all duration-300 rounded-none"
+                      placeholder="Your Company Name"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="flex items-center space-x-2 text-sm font-medium text-white/80 mb-2">
+                      <Briefcase className="w-4 h-4" />
+                      <span>Industry</span>
+                    </label>
+                    <select
+                      {...register('industry')}
+                      className="w-full bg-white/5 border border-white/20 text-white px-4 py-3 focus:outline-none focus:border-[#00FFD1] focus:bg-white/10 transition-all duration-300 rounded-none appearance-none bg-no-repeat bg-right bg-[length:16px_16px] pr-10"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2300FFD1' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                        backgroundPosition: 'right 0.75rem center',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: '1rem'
+                      }}
+                      disabled={isSubmitting}
+                    >
+                      <option value="" className="bg-gray-900 text-white">Select Industry</option>
+                      <option value="real-estate" className="bg-gray-900 text-white">Real Estate</option>
+                      <option value="hard-money" className="bg-gray-900 text-white">Hard Money Lending</option>
+                      <option value="solar" className="bg-gray-900 text-white">Solar Energy</option>
+                      <option value="government" className="bg-gray-900 text-white">Government Contracting</option>
+                      <option value="healthcare" className="bg-gray-900 text-white">Healthcare</option>
+                      <option value="technology" className="bg-gray-900 text-white">Technology</option>
+                      <option value="finance" className="bg-gray-900 text-white">Finance</option>
+                      <option value="other" className="bg-gray-900 text-white">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="flex items-center space-x-2 text-sm font-medium text-white/80 mb-2">
+                    <Target className="w-4 h-4" />
+                    <span>Service Interests</span>
+                  </label>
+                  <select
+                    {...register('service_interests')}
+                    className="w-full bg-white/5 border border-white/20 text-white px-4 py-3 focus:outline-none focus:border-[#00FFD1] focus:bg-white/10 transition-all duration-300 rounded-none appearance-none bg-no-repeat bg-right bg-[length:16px_16px] pr-10"
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2300FFD1' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                      backgroundPosition: 'right 0.75rem center',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: '1rem'
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    <option value="" className="bg-gray-900 text-white">Select Service</option>
+                    <option value="telemarketing" className="bg-gray-900 text-white">Telemarketing</option>
+                    <option value="government-contracting" className="bg-gray-900 text-white">Government Contracting</option>
+                    <option value="social-media" className="bg-gray-900 text-white">Social Media Marketing</option>
+                    <option value="lead-generation" className="bg-gray-900 text-white">Lead Generation Strategy</option>
+                    <option value="consultation" className="bg-gray-900 text-white">General Consultation</option>
+                    <option value="multiple" className="bg-gray-900 text-white">Multiple Services</option>
+                  </select>
+                </div>
+
+                {/* Date and Time Selection */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="flex items-center space-x-2 text-sm font-medium text-white/80 mb-2">
+                      <Calendar className="w-4 h-4" />
+                      <span>Preferred Date *</span>
+                    </label>
+                    <input
+                      {...register('appointment_date', { required: 'Please select a date' })}
+                      type="date"
+                      min={getMinDate()}
+                      max={getMaxDate()}
+                      onChange={handleDateChange}
+                      className="w-full bg-white/5 border border-white/20 text-white px-4 py-3 focus:outline-none focus:border-[#00FFD1] focus:bg-white/10 transition-all duration-300 rounded-none [color-scheme:dark]"
+                      disabled={isSubmitting}
+                    />
+                    {errors.appointment_date && (
+                      <p className="text-red-400 text-sm mt-1">{errors.appointment_date.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="flex items-center space-x-2 text-sm font-medium text-white/80 mb-2">
+                      <Clock className="w-4 h-4" />
+                      <span>Preferred Time *</span>
+                    </label>
+                    {loadingAvailability ? (
+                      <div className="w-full bg-white/5 border border-white/20 text-white/40 px-4 py-3 rounded-none flex items-center justify-center">
+                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                        Checking availability...
+                      </div>
+                    ) : (
+                      <select
+                        {...register('appointment_time', { required: 'Please select a time' })}
+                        className="w-full bg-white/5 border border-white/20 text-white px-4 py-3 focus:outline-none focus:border-[#00FFD1] focus:bg-white/10 transition-all duration-300 rounded-none appearance-none bg-no-repeat bg-right bg-[length:16px_16px] pr-10"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2300FFD1' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                          backgroundPosition: 'right 0.75rem center',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundSize: '1rem'
+                        }}
+                        disabled={isSubmitting || !selectedDate}
+                      >
+                        <option value="" className="bg-gray-900 text-white">Select Time</option>
+                        {availableTimeSlots.map((time) => (
+                          <option key={time} value={time} className="bg-gray-900 text-white">
+                            {formatTimeSlot(time)}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                    {errors.appointment_time && (
+                      <p className="text-red-400 text-sm mt-1">{errors.appointment_time.message}</p>
+                    )}
+                    
+                    {/* Show booked times info */}
+                    {selectedDate && bookedTimes.length > 0 && (
+                      <p className="text-white/50 text-xs mt-1">
+                        Unavailable times: {bookedTimes.map(formatTimeSlot).join(', ')}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Additional Message */}
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-2">
+                    Additional Message
+                  </label>
+                  <textarea
+                    {...register('message')}
+                    rows={4}
+                    className="w-full bg-white/5 border border-white/20 text-white placeholder-white/40 px-4 py-3 focus:outline-none focus:border-[#00FFD1] focus:bg-white/10 transition-all duration-300 rounded-none resize-vertical"
+                    placeholder="Tell us more about your goals and what you'd like to discuss..."
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || !isFormValid() || submitStatus === 'success'}
+                  className={getSubmitButtonClass()}
+                >
+                  {getSubmitButtonContent()}
+                </Button>
+              </form>
+              </>
+              )}
+            </GlassBox>
+          </ScrollReveal>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AppointmentBooking;
