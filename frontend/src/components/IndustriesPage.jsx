@@ -125,10 +125,19 @@ const IndustriesPage = () => {
             <ScrollReveal delay={0.3}>
               {/* Mobile: Icon-only row layout */}
               <div className="lg:hidden">
-                <div className="flex justify-center items-start gap-6 px-4">
+                <div className="flex justify-center items-start gap-3 px-2">
                   {industriesData.map((industry) => {
                     const IconComp = industryIcons[industry.name];
                     const isActive = activeIndustry === industry.name;
+                    
+                    // Abbreviated labels for narrow screens
+                    const labelMap = {
+                      "Real Estate": "Real Estate",
+                      "Hard Money Lending": "Hard Money",
+                      "Solar Energy": "Solar",
+                      "Government Contracting": "Gov Contract"
+                    };
+                    const label = labelMap[industry.name] || industry.name;
                     
                     return (
                       <button
@@ -159,11 +168,11 @@ const IndustriesPage = () => {
                         
                         {/* Label - always visible under all icons */}
                         <span 
-                          className={`mt-2 text-xs font-medium whitespace-nowrap transition-colors duration-200 ${
+                          className={`mt-1.5 text-[10px] font-medium whitespace-nowrap transition-colors duration-200 text-center max-w-[70px] leading-tight ${
                             isActive ? 'text-[#00FFD1]' : 'text-white/40'
                           }`}
                         >
-                          {industry.name}
+                          {label}
                         </span>
                       </button>
                     );
