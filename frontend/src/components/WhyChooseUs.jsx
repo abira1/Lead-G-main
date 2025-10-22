@@ -49,7 +49,9 @@ const WhyChooseUs = () => {
         {/* Our Unique Advantages */}
         <ScrollReveal delay={0.3}>
           <div className="mb-12 md:mb-16 lg:mb-20">
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-8 md:mb-12 text-center">Our Unique Advantages</h3>
+            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-8 md:mb-12">
+              Our <span className="bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent">Unique Advantages</span>
+            </h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {differentiators.map((item, index) => (
                 <GlassBox key={index} className="p-4 md:p-6 text-center group hover:bg-white/10 transition-all duration-300">
