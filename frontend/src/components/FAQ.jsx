@@ -13,6 +13,8 @@ import ScrollReveal from './ScrollReveal';
 import GlassBox from './GlassBox';
 
 const FAQ = () => {
+  const navigate = useNavigate();
+  
   return (
     <section id="faq" className="bg-black py-24 lg:py-32">
       <div className="container mx-auto px-6 lg:px-16">
