@@ -474,7 +474,7 @@ DEBUG=False
 
 #### Frontend (`/app/frontend/.env`)
 ```bash
-REACT_APP_BACKEND_URL=https://codeindex-3.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://clean-services-7.preview.emergentagent.com
 REACT_APP_ENVIRONMENT=production
 ```
 
@@ -598,7 +598,7 @@ Secondary Admin: mdrudra60@gmail.com
 ## Deployment URLs
 
 ```
-Production Frontend: https://codeindex-3.preview.emergentagent.com
+Production Frontend: https://clean-services-7.preview.emergentagent.com
 Backend API: /api/* (proxied through frontend URL)
 API Documentation: Disabled in production
 ```

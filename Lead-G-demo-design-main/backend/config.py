@@ -26,7 +26,7 @@ class Settings:
             "http://localhost:3000",
             "http://localhost:3001", 
             "http://127.0.0.1:3000",
-            "https://codeindex-3.preview.emergentagent.com",
+            "https://clean-services-7.preview.emergentagent.com",
             "https://lead-g-final.firebaseapp.com",
             "https://lead-g-final.web.app"
         ]

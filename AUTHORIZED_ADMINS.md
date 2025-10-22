@@ -21,7 +21,7 @@ The following email addresses are authorized to access the Lead G admin panel:
 
 ## Admin Panel Access
 
-**URL**: https://codeindex-3.preview.emergentagent.com/admin
+**URL**: https://clean-services-7.preview.emergentagent.com/admin
 
 ## Security Notes
 
