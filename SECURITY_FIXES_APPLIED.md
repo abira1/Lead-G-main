@@ -82,7 +82,7 @@ ENABLE_CORS_ALL_ORIGINS = True
 
 **After:**
 ```python
-CORS_ORIGINS = "https://leadgenerationg.com,https://www.leadgenerationg.com,https://compact-nav-icons.preview.emergentagent.com"
+CORS_ORIGINS = "https://leadgenerationg.com,https://www.leadgenerationg.com,https://codelib-index.preview.emergentagent.com"
 ENABLE_CORS_ALL_ORIGINS = "false"
 ALLOW_ALL_METHODS = "false"
 ALLOW_ALL_HEADERS = "false"

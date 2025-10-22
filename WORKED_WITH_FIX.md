@@ -20,7 +20,7 @@ The "Companies We've Worked With" section on the homepage was showing an empty g
 
 ```env
 # Backend API URL
-REACT_APP_BACKEND_URL=https://compact-nav-icons.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://codelib-index.preview.emergentagent.com
 
 # Environment
 REACT_APP_ENVIRONMENT=production
@@ -53,7 +53,7 @@ sudo supervisorctl restart frontend
 ```bash
 # Found the preview endpoint from environment
 env | grep preview
-# Output: preview_endpoint=https://compact-nav-icons.preview.emergentagent.com
+# Output: preview_endpoint=https://codelib-index.preview.emergentagent.com
 ```
 
 ### Component Flow
@@ -91,7 +91,7 @@ env | grep preview
 
 ### Environment URLs:
 - **Local Development:** `http://localhost:8001`
-- **Production/Preview:** `https://compact-nav-icons.preview.emergentagent.com`
+- **Production/Preview:** `https://codelib-index.preview.emergentagent.com`
 
 ## ✅ Status: RESOLVED
 
