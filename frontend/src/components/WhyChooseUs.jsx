@@ -180,16 +180,24 @@ const WhyChooseUs = () => {
                 shine={true}
               >
                 <div className="mb-4">
-                  <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300 flex items-center justify-center gap-1">
-                    <span className="text-3xl">★</span> 100%
+                  {/* 5 Stars at top */}
+                  <div className="flex items-center justify-center gap-1 mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-300">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-2xl md:text-3xl lg:text-4xl text-[#00FFD1]">★</span>
+                    ))}
                   </div>
-                  <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2">
+                  
+                  {/* 100% */}
+                  <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3">
+                    100%
+                  </div>
+                  
+                  {/* Client Satisfaction */}
+                  <div className="text-sm md:text-base text-white font-semibold mb-3 md:mb-4">
                     Client Satisfaction
                   </div>
-                  <div className="text-xs md:text-sm text-white/60">
-                    5-star rated service
-                  </div>
                 </div>
+                
                 {/* Animated Waveform */}
                 <div className="flex items-center justify-center gap-[2px] h-12 md:h-16">
                   {[...Array(25)].map((_, i) => {
