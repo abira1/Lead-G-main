@@ -59,51 +59,7 @@ const Industries = () => {
           })}
         </div>
 
-        {/* Success Metrics */}
-        <ScrollReveal delay={0.6}>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            <GlassBox 
-              className="p-6 group cursor-pointer animate-float"
-              hover={true}
-              hoverScale={1.1}
-              glow={true}
-              style={{ animationDelay: `${0 * 0.2}s` }}
-            >
-              <div className="text-3xl lg:text-4xl font-bold text-[#00FFD1] mb-2">250%</div>
-              <div className="text-sm text-white/60 font-medium">Avg. Growth</div>
-            </GlassBox>
-            <GlassBox 
-              className="p-6 group cursor-pointer animate-float"
-              hover={true}
-              hoverScale={1.1}
-              glow={true}
-              style={{ animationDelay: `${1 * 0.2}s` }}
-            >
-              <div className="text-3xl lg:text-4xl font-bold text-[#00FFD1] mb-2">500+</div>
-              <div className="text-sm text-white/60 font-medium">Active Clients</div>
-            </GlassBox>
-            <GlassBox 
-              className="p-6 group cursor-pointer animate-float"
-              hover={true}
-              hoverScale={1.1}
-              glow={true}
-              style={{ animationDelay: `${2 * 0.2}s` }}
-            >
-              <div className="text-3xl lg:text-4xl font-bold text-[#00FFD1] mb-2">28%</div>
-              <div className="text-sm text-white/60 font-medium">Conversion</div>
-            </GlassBox>
-            <GlassBox 
-              className="p-6 group cursor-pointer animate-float"
-              hover={true}
-              hoverScale={1.1}
-              glow={true}
-              style={{ animationDelay: `${3 * 0.2}s` }}
-            >
-              <div className="text-3xl lg:text-4xl font-bold text-[#00FFD1] mb-2">$50M+</div>
-              <div className="text-sm text-white/60 font-medium">Generated</div>
-            </GlassBox>
-          </div>
-        </ScrollReveal>
+        {/* Metrics section removed as requested */}
       </div>
     </section>
   );
