@@ -39,6 +39,19 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Track window resize for desktop/mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+      // Close dropdown when switching between mobile/desktop
+      if (window.innerWidth < 1024) {
+        setActiveDropdown(null);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Handle hash link scrolling
   const handleHashLink = (href) => {
     if (href.includes('#')) {
