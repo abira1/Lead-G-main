@@ -67,9 +67,16 @@ const FAQ = () => {
                 Schedule a free consultation to get personalized answers
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+                <Button
+                  onClick={() => navigate('/book-appointment')}
+                  className="btn-primary bg-[#00FFD1] text-black border-none rounded-none px-6 py-3 text-base font-medium hover:bg-[#00FFD1]/90 hover:scale-105 transition-all duration-400 min-h-[48px] flex items-center space-x-2"
+                >
+                  <Calendar className="w-5 h-5" />
+                  <span>Book Free Consultation</span>
+                </Button>
                 <a
                   href="tel:+1-555-123-4567"
-                  className="btn-primary bg-[#00FFD1] text-black border-none rounded-none px-6 py-3 text-base font-medium hover:bg-[#00FFD1]/10 hover:text-[#00FFD1] transition-all duration-400 min-h-[48px] flex items-center space-x-2 text-decoration-none"
+                  className="btn-secondary bg-white/10 text-white border-none rounded-none px-6 py-3 text-base font-medium hover:bg-white hover:text-black transition-all duration-400 min-h-[48px] flex items-center space-x-2 text-decoration-none"
                 >
                   <span>Call Now</span>
                 </a>
