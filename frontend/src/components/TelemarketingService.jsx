@@ -161,29 +161,10 @@ const TelemarketingService = () => {
                 <span className="text-white/90 text-lg font-medium ml-2">100% client satisfaction</span>
               </div>
             </ScrollReveal>
-
-            {/* Logo Slider */}
-            {!loadingCompanies && logoData.length > 0 && (
-              <ScrollReveal delay={0.6}>
-                <div className="mb-8 py-6">
-                  <LogoLoop
-                    logos={logoData}
-                    speed={80}
-                    direction="left"
-                    logoHeight={80}
-                    gap={48}
-                    pauseOnHover={true}
-                    scaleOnHover={true}
-                    fadeOut={true}
-                    fadeOutColor="#000000"
-                    ariaLabel="Companies we have worked with"
-                  />
-                </div>
-              </ScrollReveal>
-            )}
             
-            <ScrollReveal delay={0.7}>
-              <div className="flex flex-col sm:flex-row gap-4">
+            {/* CTA Buttons */}
+            <ScrollReveal delay={0.6}>
+              <div className="flex flex-col sm:flex-row gap-4 mb-12">
                 <Button 
                   onClick={handleBookConsultation}
                   className="bg-[#00FFD1] text-black hover:bg-[#00FFD1]/90 px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-none flex items-center justify-center space-x-2 w-full sm:w-auto"
@@ -200,6 +181,28 @@ const TelemarketingService = () => {
                 </Button>
               </div>
             </ScrollReveal>
+
+            {/* Logo Slider */}
+            {!loadingCompanies && logoData.length > 0 && (
+              <ScrollReveal delay={0.7}>
+                <div className="w-full py-4">
+                  <div className="overflow-hidden">
+                    <LogoLoop
+                      logos={logoData}
+                      speed={60}
+                      direction="left"
+                      logoHeight={60}
+                      gap={40}
+                      pauseOnHover={true}
+                      scaleOnHover={true}
+                      fadeOut={true}
+                      fadeOutColor="#000000"
+                      ariaLabel="Companies we have worked with"
+                    />
+                  </div>
+                </div>
+              </ScrollReveal>
+            )}
           </div>
         </div>
       </section>
