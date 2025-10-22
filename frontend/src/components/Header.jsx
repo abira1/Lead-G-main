@@ -238,9 +238,9 @@ const Header = () => {
                             {item.dropdown.map((subItem) => {
                               const IconComponent = item.name === 'Services' ? serviceIcons[subItem.name] : industryIcons[subItem.name];
                               return (
-                                <a
+                                <Link
                                   key={subItem.name}
-                                  href={subItem.href}
+                                  to={subItem.href}
                                   className="flex items-center space-x-3 text-white/60 hover:text-white transition-colors duration-300 py-2 px-2 text-sm rounded-lg hover:bg-white/5"
                                   onClick={() => {
                                     setActiveDropdown(null);
@@ -251,7 +251,7 @@ const Header = () => {
                                     <IconComponent className="w-4 h-4 text-[#00FFD1]" />
                                   )}
                                   <span>{subItem.name}</span>
-                                </a>
+                                </Link>
                               );
                             })}
                           </div>
