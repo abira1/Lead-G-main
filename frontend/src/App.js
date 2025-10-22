@@ -82,6 +82,7 @@ function App() {
             v7_relativeSplatPath: true
           }}
         >
+          <ScrollToTop />
           <Layout>
             <Routes>
               <Route path="/" element={<HomePage />} />
