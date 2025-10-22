@@ -22,6 +22,8 @@ const PricingPage = () => {
 
   const [activeService, setActiveService] = useState(getInitialService());
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showLabel, setShowLabel] = useState(true); // Show label on initial load
+  const [labelTimeout, setLabelTimeout] = useState(null);
 
   // Listen for hash changes
   useEffect(() => {
