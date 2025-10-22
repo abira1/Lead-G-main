@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv('/app/frontend/.env')
 
 # Get the backend URL from frontend environment
-BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://homepage-hero-edit.preview.emergentagent.com')
+BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://codeindex-3.preview.emergentagent.com')
 API_BASE_URL = f"{BACKEND_URL}/api"
 
 class AppointmentBookingTester:

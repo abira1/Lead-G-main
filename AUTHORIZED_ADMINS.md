@@ -21,7 +21,7 @@ The following email addresses are authorized to access the Lead G admin panel:
 
 ## Admin Panel Access
 
-**URL**: https://homepage-hero-edit.preview.emergentagent.com/admin
+**URL**: https://codeindex-3.preview.emergentagent.com/admin
 
 ## Security Notes
 
