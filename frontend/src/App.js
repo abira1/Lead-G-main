@@ -27,6 +27,7 @@ import Testimonials from "./components/Testimonials";
 import WorkedWith from "./components/WorkedWith";
 import { AuthProvider } from "./contexts/AuthContext";
 import Demo from "./Demo";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Home Page Component (removed Pricing and Case Studies sections)
 const HomePage = () => (
