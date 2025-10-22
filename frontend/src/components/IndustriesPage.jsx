@@ -9,8 +9,6 @@ const IndustriesPage = () => {
   const location = useLocation();
   const [activeIndustry, setActiveIndustry] = useState('Real Estate');
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [showLabel, setShowLabel] = useState(true); // Show label on initial load
-  const [labelTimeout, setLabelTimeout] = useState(null);
 
   // Check URL parameters on component mount and when location changes
   useEffect(() => {
