@@ -180,21 +180,21 @@ const WhyChooseUs = () => {
                 shine={true}
               >
                 <div className="mb-4">
-                  {/* 5 Stars at top */}
-                  <div className="flex items-center justify-center gap-1 mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-300">
+                  {/* 5 Stars replacing the main number */}
+                  <div className="flex items-center justify-center gap-1 mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-2xl md:text-3xl lg:text-4xl text-[#00FFD1]">★</span>
+                      <span key={i} className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#00FFD1]">★</span>
                     ))}
                   </div>
                   
-                  {/* 100% */}
-                  <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3">
-                    100%
-                  </div>
-                  
-                  {/* Client Satisfaction */}
+                  {/* Title */}
                   <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2">
                     Client Satisfaction
+                  </div>
+                  
+                  {/* Description */}
+                  <div className="text-xs md:text-sm text-white/60">
+                    5-star rated service
                   </div>
                 </div>
                 <div className="w-12 md:w-16 h-1 bg-gradient-to-r from-[#00FFD1] to-transparent mx-auto opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
