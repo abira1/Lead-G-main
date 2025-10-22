@@ -223,6 +223,44 @@ const SocialMediaService = () => {
         )}
       </section>
 
+      {/* Benefits Section */}
+      <section className="bg-black py-16 lg:py-24">
+        <div className="container mx-auto px-6 lg:px-16">
+          <ScrollReveal delay={0.2}>
+            <div className="text-center mb-16">
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                Why Choose Our <span className="text-[#00FFD1]">Social Media</span> Team
+              </h2>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {benefits.map((benefit, index) => {
+              const IconComponent = benefit.icon;
+              return (
+                <ScrollReveal key={index} delay={0.2 * (index + 1)}>
+                  <GlassBox 
+                    className="p-8 text-center h-full"
+                    blur={16}
+                    opacity={0.1}
+                    hover={true}
+                    glow={true}
+                  >
+                    <div className="mb-6">
+                      <GlassBox className="w-16 h-16 mx-auto bg-[#00FFD1]/20 flex items-center justify-center">
+                        <IconComponent className="w-8 h-8 text-[#00FFD1]" />
+                      </GlassBox>
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-4">{benefit.title}</h3>
+                    <p className="text-white/70 leading-relaxed">{benefit.description}</p>
+                  </GlassBox>
+                </ScrollReveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* Platforms Section */}
       <section className="bg-black py-16 lg:py-24">
         <div className="container mx-auto px-6 lg:px-16">
@@ -320,44 +358,6 @@ const SocialMediaService = () => {
                 </GlassBox>
               </ScrollReveal>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="bg-black py-16 lg:py-24">
-        <div className="container mx-auto px-6 lg:px-16">
-          <ScrollReveal delay={0.2}>
-            <div className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                Why Choose Our <span className="text-[#00FFD1]">Social Media</span> Team
-              </h2>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid lg:grid-cols-3 gap-8">
-            {benefits.map((benefit, index) => {
-              const IconComponent = benefit.icon;
-              return (
-                <ScrollReveal key={index} delay={0.2 * (index + 1)}>
-                  <GlassBox 
-                    className="p-8 text-center h-full"
-                    blur={16}
-                    opacity={0.1}
-                    hover={true}
-                    glow={true}
-                  >
-                    <div className="mb-6">
-                      <GlassBox className="w-16 h-16 mx-auto bg-[#00FFD1]/20 flex items-center justify-center">
-                        <IconComponent className="w-8 h-8 text-[#00FFD1]" />
-                      </GlassBox>
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">{benefit.title}</h3>
-                    <p className="text-white/70 leading-relaxed">{benefit.description}</p>
-                  </GlassBox>
-                </ScrollReveal>
-              );
-            })}
           </div>
         </div>
       </section>
