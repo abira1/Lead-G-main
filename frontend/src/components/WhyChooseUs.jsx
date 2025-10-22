@@ -8,7 +8,7 @@ const WhyChooseUs = () => {
     {
       icon: Award,
       title: "Proven Experience",
-      description: "With more than 7 years in Real Estate, Government Contracting, Solar, and Hard Money Lending, we bring industry-tested strategies and a clear understanding of what works.",
+      description: "With more than 7 years in Real Estate, Solar, Government Contracting, and more, we bring industry-tested strategies and a clear understanding of what works.",
       highlight: "7+ Years Experience"
     },
     {
@@ -27,7 +27,7 @@ const WhyChooseUs = () => {
       icon: Globe,
       title: "Global Market Reach",
       description: "From the U.S. and Canada to the U.K. and Dubai, we've successfully navigated diverse markets, giving your campaigns both local insight and global perspective.",
-      highlight: "4+ Countries Served"
+      highlight: "7+ Countries Served"
     }
   ];
 
