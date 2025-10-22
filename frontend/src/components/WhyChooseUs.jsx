@@ -189,7 +189,7 @@ const WhyChooseUs = () => {
                   
                   {/* Title */}
                   <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2">
-                    Client Satisfaction
+                    100% Client Satisfaction
                   </div>
                   
                   {/* Description */}
