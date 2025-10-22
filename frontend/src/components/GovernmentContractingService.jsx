@@ -1,11 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Building, FileText, Shield, CheckCircle, ArrowRight, Star, Award, DollarSign, Users, Target, TrendingUp } from 'lucide-react';
 import { Button } from './ui/button';
 import ScrollReveal from './ScrollReveal';
 import GlassBox from './GlassBox';
-import WorkedWith from './WorkedWith';
+import LogoLoop from './LogoLoop';
+import { getWorkedWithCompanies } from '../services/firebaseService';
 
 const GovernmentContractingService = () => {
+  const [companies, setCompanies] = useState([]);
+  const [loadingCompanies, setLoadingCompanies] = useState(true);
+
+  useEffect(() => {
+    fetchCompanies();
+  }, []);
+
+  const fetchCompanies = async () => {
+    try {
+      const result = await getWorkedWithCompanies();
+      if (result.success) {
+        setCompanies(result.data);
+      }
+    } catch (error) {
+      console.error('Error fetching companies:', error);
+    } finally {
+      setLoadingCompanies(false);
+    }
+  };
+
+  // Demo companies fallback
+  const demoCompanies = [
+    { id: "demo-1", company_name: "Microsoft", logo_url: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", website_url: "https://www.microsoft.com" },
+    { id: "demo-2", company_name: "Apple", logo_url: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg", website_url: "https://www.apple.com" },
+    { id: "demo-3", company_name: "Google", logo_url: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", website_url: "https://www.google.com" },
+    { id: "demo-4", company_name: "Amazon", logo_url: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", website_url: "https://www.amazon.com" },
+    { id: "demo-5", company_name: "Tesla", logo_url: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg", website_url: "https://www.tesla.com" },
+    { id: "demo-6", company_name: "Netflix", logo_url: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg", website_url: "https://www.netflix.com" },
+    { id: "demo-7", company_name: "Meta", logo_url: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg", website_url: "https://www.meta.com" },
+    { id: "demo-8", company_name: "Salesforce", logo_url: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg", website_url: "https://www.salesforce.com" },
+    { id: "demo-9", company_name: "Adobe", logo_url: "https://upload.wikimedia.org/wikipedia/commons/8/8d/Adobe_Corporate_Logo.svg", website_url: "https://www.adobe.com" },
+    { id: "demo-10", company_name: "IBM", logo_url: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg", website_url: "https://www.ibm.com" }
+  ];
+
+  const displayCompanies = companies.length > 0 ? companies : demoCompanies;
+  const logoData = displayCompanies.map(company => ({
+    src: company.logo_url || '',
+    alt: company.company_name,
+    title: company.company_name,
+    href: company.website_url || undefined,
+    className: "rounded-lg"
+  }));
+
   const features = [
     "Proposal writing & review",
     "Compliance assistance", 
@@ -91,83 +135,78 @@ const GovernmentContractingService = () => {
         ></div>
         
         <div className="container mx-auto px-6 lg:px-16 relative z-20">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            
+          <div className="max-w-4xl">
             {/* Hero Content */}
-            <div>
-              <ScrollReveal delay={0.2}>
-                <div className="flex items-center space-x-3 mb-6">
-                  <GlassBox className="w-12 h-12 bg-[#00FFD1]/20 flex items-center justify-center">
-                    <Building className="w-6 h-6 text-[#00FFD1]" />
-                  </GlassBox>
-                  <span className="text-[#00FFD1] font-semibold text-lg">Government Contracting</span>
-                </div>
-              </ScrollReveal>
-              
-              <ScrollReveal delay={0.3}>
-                <h1 className="text-4xl lg:text-6xl font-bold text-white leading-tight mb-6">
-                  Secure <span className="text-[#00FFD1]">Government Contracts</span> with Confidence
-                </h1>
-              </ScrollReveal>
-              
-              <ScrollReveal delay={0.4}>
-                <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                  Navigate complex government procurement processes with our specialized team. 
-                  We've helped businesses secure over $50M in federal and state contracts.
-                </p>
-              </ScrollReveal>
-              
-              <ScrollReveal delay={0.5}>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button 
-                    onClick={handleBookConsultation}
-                    className="bg-[#00FFD1] text-black hover:bg-[#00FFD1]/90 px-8 py-4 text-lg font-semibold rounded-none flex items-center space-x-2"
-                  >
-                    <span>Book Strategy Session</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </Button>
-                  
-                  <Button 
-                    onClick={handleGetPricing}
-                    className="bg-white/10 text-white hover:bg-white/20 px-8 py-4 text-lg font-semibold rounded-none border border-white/30 backdrop-blur-sm"
-                  >
-                    View Services
-                  </Button>
-                </div>
-              </ScrollReveal>
-            </div>
-            
-            {/* Hero Visual */}
-            <div>
-              <ScrollReveal delay={0.6}>
-                <GlassBox 
-                  className="p-8 lg:p-12"
-                  blur={20}
-                  opacity={0.1}
-                  glow={true}
-                  shine={true}
-                >
-                  <div className="text-center">
-                    <div className="mb-8">
-                      <Building className="w-20 h-20 text-[#00FFD1] mx-auto mb-4" />
-                      <h3 className="text-2xl font-bold text-white mb-2">Proven Track Record</h3>
-                      <p className="text-white/70">Helping businesses win government contracts since 2017</p>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-6 text-center">
-                      <div>
-                        <div className="text-3xl font-bold text-[#00FFD1]">$50M+</div>
-                        <div className="text-sm text-white/70">Contracts Secured</div>
-                      </div>
-                      <div>
-                        <div className="text-3xl font-bold text-[#00FFD1]">85%</div>
-                        <div className="text-sm text-white/70">Win Rate</div>
-                      </div>
-                    </div>
-                  </div>
+            <ScrollReveal delay={0.2}>
+              <div className="flex items-center space-x-3 mb-6">
+                <GlassBox className="w-12 h-12 bg-[#00FFD1]/20 flex items-center justify-center">
+                  <Building className="w-6 h-6 text-[#00FFD1]" />
                 </GlassBox>
+                <span className="text-[#00FFD1] font-semibold text-lg">Government Contracting</span>
+              </div>
+            </ScrollReveal>
+            
+            <ScrollReveal delay={0.3}>
+              <h1 className="text-4xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                Secure <span className="text-[#00FFD1]">Government Contracts</span> with Confidence
+              </h1>
+            </ScrollReveal>
+            
+            <ScrollReveal delay={0.4}>
+              <p className="text-xl text-white/90 mb-8 leading-relaxed">
+                Navigate complex government procurement processes with our specialized team. 
+                We've helped businesses secure over $50M in federal and state contracts.
+              </p>
+            </ScrollReveal>
+
+            {/* 100% Client Satisfaction */}
+            <ScrollReveal delay={0.5}>
+              <div className="flex items-center space-x-2 mb-8">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 text-[#FFD700] fill-[#FFD700]" />
+                ))}
+                <span className="text-white/90 text-lg font-medium ml-2">100% client satisfaction</span>
+              </div>
+            </ScrollReveal>
+
+            {/* Logo Slider */}
+            {!loadingCompanies && logoData.length > 0 && (
+              <ScrollReveal delay={0.6}>
+                <div className="mb-8 py-6">
+                  <LogoLoop
+                    logos={logoData}
+                    speed={80}
+                    direction="left"
+                    logoHeight={80}
+                    gap={48}
+                    pauseOnHover={true}
+                    scaleOnHover={true}
+                    fadeOut={true}
+                    fadeOutColor="#000000"
+                    ariaLabel="Companies we have worked with"
+                  />
+                </div>
               </ScrollReveal>
-            </div>
+            )}
+            
+            <ScrollReveal delay={0.7}>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button 
+                  onClick={handleBookConsultation}
+                  className="bg-[#00FFD1] text-black hover:bg-[#00FFD1]/90 px-8 py-4 text-lg font-semibold rounded-none flex items-center space-x-2"
+                >
+                  <span>Book Strategy Session</span>
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+                
+                <Button 
+                  onClick={handleGetPricing}
+                  className="bg-white/10 text-white hover:bg-white/20 px-8 py-4 text-lg font-semibold rounded-none border border-white/30 backdrop-blur-sm"
+                >
+                  View Services
+                </Button>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -402,9 +441,6 @@ const GovernmentContractingService = () => {
           </div>
         </div>
       </section>
-
-      {/* Companies We've Worked With Section */}
-      <WorkedWith />
 
       {/* Case Studies Button */}
       <section className="py-8 bg-black">
