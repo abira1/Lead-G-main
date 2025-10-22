@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { faqData } from '../data/mock';
 import {
   Accordion,
@@ -6,6 +7,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from './ui/accordion';
+import { Button } from './ui/button';
+import { Calendar } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import GlassBox from './GlassBox';
 
