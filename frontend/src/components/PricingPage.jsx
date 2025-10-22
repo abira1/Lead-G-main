@@ -161,16 +161,14 @@ const PricingPage = () => {
                           }`} />
                         </div>
                         
-                        {/* Label - only shows under active icon */}
-                        {isActive && (
-                          <span 
-                            className={`mt-2 text-xs font-medium text-[#00FFD1] whitespace-nowrap text-center transition-opacity duration-200 ${
-                              showLabel ? 'opacity-100' : 'opacity-0'
-                            }`}
-                          >
-                            {service}
-                          </span>
-                        )}
+                        {/* Label - always visible under all icons */}
+                        <span 
+                          className={`mt-2 text-xs font-medium whitespace-nowrap text-center transition-colors duration-200 ${
+                            isActive ? 'text-[#00FFD1]' : 'text-white/40'
+                          }`}
+                        >
+                          {service}
+                        </span>
                       </button>
                     );
                   })}
