@@ -32,8 +32,8 @@ import Demo from "./Demo";
 const HomePage = () => (
   <>
     <Hero />
-    <WhyChooseUs />
     <Industries />
+    <WhyChooseUs />
     <Services />
     <WorkedWith />
     <section className="py-8 bg-black">
