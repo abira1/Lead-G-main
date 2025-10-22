@@ -71,12 +71,34 @@ const PricingPage = () => {
   const handleServiceChange = (service) => {
     if (service === activeService) return;
     
+    // Clear existing timeout if any
+    if (labelTimeout) {
+      clearTimeout(labelTimeout);
+    }
+    
     setIsTransitioning(true);
+    setShowLabel(true); // Show label immediately on tap
+    
     setTimeout(() => {
       setActiveService(service);
       setIsTransitioning(false);
     }, 300);
+    
+    // Hide label after 1.2 seconds
+    const timeout = setTimeout(() => {
+      setShowLabel(false);
+    }, 1200);
+    setLabelTimeout(timeout);
   };
+  
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (labelTimeout) {
+        clearTimeout(labelTimeout);
+      }
+    };
+  }, [labelTimeout]);
 
   const handleChoosePlan = (pkg, serviceName) => {
     // Map service names to service interests values for form pre-population
