@@ -70,9 +70,9 @@ const WhyChooseUs = () => {
         {/* Success Metrics - Redesigned */}
         <ScrollReveal delay={0.2}>
           <div className="text-center mb-8 md:mb-12">
-            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-3 md:mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight tracking-tight mb-3 md:mb-4">
               Our <span className="bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent">Impact</span>
-            </h3>
+            </h2>
             <p className="text-base md:text-lg text-white/70 max-w-2xl mx-auto px-4">
               Real results from real campaigns - the numbers that define our success
             </p>
