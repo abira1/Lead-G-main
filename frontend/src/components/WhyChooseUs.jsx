@@ -81,40 +81,40 @@ const WhyChooseUs = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-4">
             <ScrollReveal delay={0.3}>
               <GlassBox 
-                className="p-6 md:p-8 lg:p-10 text-center group hover:scale-105 transition-all duration-300"
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
                 blur={20}
                 opacity={0.1}
                 glow={true}
                 shine={true}
               >
                 <div className="mb-4">
-                  <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                     $50M+
                   </div>
-                  <div className="text-sm md:text-base lg:text-lg text-white font-semibold mb-1 md:mb-2">
-                    Government Contracts
+                  <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2">
+                    Revenue Generated
                   </div>
                   <div className="text-xs md:text-sm text-white/60">
-                    Secured for our clients
+                    For our clients
                   </div>
                 </div>
                 <div className="w-12 md:w-16 h-1 bg-gradient-to-r from-[#00FFD1] to-transparent mx-auto opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
               </GlassBox>
             </ScrollReveal>
             
-            <ScrollReveal delay={0.4}>
+            <ScrollReveal delay={0.35}>
               <GlassBox 
-                className="p-6 md:p-8 lg:p-10 text-center group hover:scale-105 transition-all duration-300"
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
                 blur={20}
                 opacity={0.1}
                 glow={true}
                 shine={true}
               >
                 <div className="mb-4">
-                  <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                     28%
                   </div>
-                  <div className="text-sm md:text-base lg:text-lg text-white font-semibold mb-1 md:mb-2">
+                  <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2">
                     Average Conversion
                   </div>
                   <div className="text-xs md:text-sm text-white/60">
@@ -125,23 +125,69 @@ const WhyChooseUs = () => {
               </GlassBox>
             </ScrollReveal>
             
-            <ScrollReveal delay={0.5}>
+            <ScrollReveal delay={0.4}>
               <GlassBox 
-                className="p-6 md:p-8 lg:p-10 text-center group hover:scale-105 transition-all duration-300"
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
                 blur={20}
                 opacity={0.1}
                 glow={true}
                 shine={true}
               >
                 <div className="mb-4">
-                  <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
+                    2.5x
+                  </div>
+                  <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2">
+                    ROI Increased
+                  </div>
+                  <div className="text-xs md:text-sm text-white/60">
+                    Average client growth
+                  </div>
+                </div>
+                <div className="w-12 md:w-16 h-1 bg-gradient-to-r from-[#00FFD1] to-transparent mx-auto opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </GlassBox>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.45}>
+              <GlassBox 
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
+                blur={20}
+                opacity={0.1}
+                glow={true}
+                shine={true}
+              >
+                <div className="mb-4">
+                  <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                     4+
                   </div>
-                  <div className="text-sm md:text-base lg:text-lg text-white font-semibold mb-1 md:mb-2">
+                  <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2">
                     Global Markets
                   </div>
                   <div className="text-xs md:text-sm text-white/60">
                     Countries successfully served
+                  </div>
+                </div>
+                <div className="w-12 md:w-16 h-1 bg-gradient-to-r from-[#00FFD1] to-transparent mx-auto opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </GlassBox>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.5}>
+              <GlassBox 
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
+                blur={20}
+                opacity={0.1}
+                glow={true}
+                shine={true}
+              >
+                <div className="mb-4">
+                  <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300 flex items-center justify-center gap-1">
+                    <span className="text-3xl">★</span> 100%
+                  </div>
+                  <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2">
+                    Client Satisfaction
+                  </div>
+                  <div className="text-xs md:text-sm text-white/60">
+                    5-star rated service
                   </div>
                 </div>
                 <div className="w-12 md:w-16 h-1 bg-gradient-to-r from-[#00FFD1] to-transparent mx-auto opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
