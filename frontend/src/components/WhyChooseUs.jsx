@@ -41,7 +41,7 @@ const WhyChooseUs = () => {
               Why Choose <span className="bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent">LeadG</span>?
             </h2>
             <p className="text-base md:text-lg text-white/60 font-medium max-w-3xl mx-auto px-4">
-              Industry-tested expertise meets professional excellence across telemarketing and government contracting
+              Get qualified outbound leads and targeted digital campaigns that convert — no fluff, just customers.
             </p>
           </div>
         </ScrollReveal>
