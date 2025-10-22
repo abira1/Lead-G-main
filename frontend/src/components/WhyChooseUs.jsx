@@ -173,7 +173,7 @@ const WhyChooseUs = () => {
 
             <ScrollReveal delay={0.5}>
               <GlassBox 
-                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300 relative overflow-hidden"
                 blur={20}
                 opacity={0.1}
                 glow={true}
@@ -190,7 +190,24 @@ const WhyChooseUs = () => {
                     5-star rated service
                   </div>
                 </div>
-                <div className="w-12 md:w-16 h-1 bg-gradient-to-r from-[#00FFD1] to-transparent mx-auto opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {/* Animated Waveform */}
+                <div className="flex items-center justify-center gap-[2px] h-12 md:h-16">
+                  {[...Array(25)].map((_, i) => {
+                    const isHighlight = i < 5;
+                    const heights = ['h-4', 'h-8', 'h-6', 'h-10', 'h-5', 'h-7', 'h-9', 'h-6', 'h-8', 'h-5', 'h-7', 'h-6', 'h-9', 'h-7', 'h-8', 'h-6', 'h-10', 'h-7', 'h-9', 'h-6', 'h-8', 'h-7', 'h-10', 'h-6', 'h-8'];
+                    const delays = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4];
+                    return (
+                      <div
+                        key={i}
+                        className={`w-1 ${heights[i]} ${isHighlight ? 'bg-gradient-to-t from-[#00FFD1] to-[#00FFD1]/50' : 'bg-white/40'} rounded-full animate-pulse`}
+                        style={{
+                          animationDelay: `${delays[i]}s`,
+                          animationDuration: '2s'
+                        }}
+                      />
+                    );
+                  })}
+                </div>
               </GlassBox>
             </ScrollReveal>
           </div>
