@@ -205,6 +205,68 @@ const TelemarketingService = () => {
         )}
       </section>
 
+      {/* Why Choose LeadG for Telemarketing */}
+      <section className="bg-black py-16 lg:py-24">
+        <div className="container mx-auto px-6 lg:px-16">
+          <ScrollReveal delay={0.2}>
+            <div className="text-center mb-16">
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                Why Choose <span className="text-[#00FFD1]">LeadG</span> for Telemarketing?
+              </h2>
+              <p className="text-xl text-white/70 max-w-3xl mx-auto">
+                7+ years of proven expertise with in-house, specialized agents delivering results across global markets
+              </p>
+            </div>
+          </ScrollReveal>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <ScrollReveal delay={0.3}>
+              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
+                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
+                  <Star className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div className="text-sm font-bold text-[#00FFD1] mb-2">7+ Years Experience</div>
+                <h3 className="text-lg font-bold text-white mb-3">Proven Experience</h3>
+                <p className="text-white/60 text-sm">Industry-tested strategies in Real Estate, Solar, and Hard Money Lending with clear understanding of what works.</p>
+              </GlassBox>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.4}>
+              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
+                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div className="text-sm font-bold text-[#00FFD1] mb-2">100% In-House</div>
+                <h3 className="text-lg font-bold text-white mb-3">Ready-to-Go Agents</h3>
+                <p className="text-white/60 text-sm">Every agent is hired, trained, and developed by LeadG. No outsourcing - fully prepared to step into your operations.</p>
+              </GlassBox>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.5}>
+              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
+                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
+                  <Target className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div className="text-sm font-bold text-[#00FFD1] mb-2">Industry-Focused</div>
+                <h3 className="text-lg font-bold text-white mb-3">Specialized Training</h3>
+                <p className="text-white/60 text-sm">Our agents focus on one specific industry, building deep expertise to communicate with depth, not just follow scripts.</p>
+              </GlassBox>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.6}>
+              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
+                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div className="text-sm font-bold text-[#00FFD1] mb-2">7+ Countries Served</div>
+                <h3 className="text-lg font-bold text-white mb-3">Global Market Reach</h3>
+                <p className="text-white/60 text-sm">From U.S. and Canada to U.K. and Dubai, we navigate diverse markets with local insight and global perspective.</p>
+              </GlassBox>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="bg-black py-16 lg:py-24">
         <div className="container mx-auto px-6 lg:px-16">
@@ -233,44 +295,6 @@ const TelemarketingService = () => {
                 </GlassBox>
               </ScrollReveal>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="bg-black py-16 lg:py-24">
-        <div className="container mx-auto px-6 lg:px-16">
-          <ScrollReveal delay={0.2}>
-            <div className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                Why Choose Our <span className="text-[#00FFD1]">Telemarketing</span>
-              </h2>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid lg:grid-cols-3 gap-8">
-            {benefits.map((benefit, index) => {
-              const IconComponent = benefit.icon;
-              return (
-                <ScrollReveal key={index} delay={0.2 * (index + 1)}>
-                  <GlassBox 
-                    className="p-8 text-center h-full"
-                    blur={16}
-                    opacity={0.1}
-                    hover={true}
-                    glow={true}
-                  >
-                    <div className="mb-6">
-                      <GlassBox className="w-16 h-16 mx-auto bg-[#00FFD1]/20 flex items-center justify-center">
-                        <IconComponent className="w-8 h-8 text-[#00FFD1]" />
-                      </GlassBox>
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">{benefit.title}</h3>
-                    <p className="text-white/70 leading-relaxed">{benefit.description}</p>
-                  </GlassBox>
-                </ScrollReveal>
-              );
-            })}
           </div>
         </div>
       </section>
@@ -337,68 +361,6 @@ const TelemarketingService = () => {
               </div>
             </GlassBox>
           </ScrollReveal>
-        </div>
-      </section>
-
-      {/* Why Choose LeadG for Telemarketing */}
-      <section className="bg-black py-16 lg:py-24">
-        <div className="container mx-auto px-6 lg:px-16">
-          <ScrollReveal delay={0.2}>
-            <div className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                Why Choose <span className="text-[#00FFD1]">LeadG</span> for Telemarketing?
-              </h2>
-              <p className="text-xl text-white/70 max-w-3xl mx-auto">
-                7+ years of proven expertise with in-house, specialized agents delivering results across global markets
-              </p>
-            </div>
-          </ScrollReveal>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <ScrollReveal delay={0.3}>
-              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
-                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
-                  <Star className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="text-sm font-bold text-[#00FFD1] mb-2">7+ Years Experience</div>
-                <h3 className="text-lg font-bold text-white mb-3">Proven Experience</h3>
-                <p className="text-white/60 text-sm">Industry-tested strategies in Real Estate, Solar, and Hard Money Lending with clear understanding of what works.</p>
-              </GlassBox>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.4}>
-              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
-                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="text-sm font-bold text-[#00FFD1] mb-2">100% In-House</div>
-                <h3 className="text-lg font-bold text-white mb-3">Ready-to-Go Agents</h3>
-                <p className="text-white/60 text-sm">Every agent is hired, trained, and developed by LeadG. No outsourcing - fully prepared to step into your operations.</p>
-              </GlassBox>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.5}>
-              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
-                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
-                  <Target className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="text-sm font-bold text-[#00FFD1] mb-2">Industry-Focused</div>
-                <h3 className="text-lg font-bold text-white mb-3">Specialized Training</h3>
-                <p className="text-white/60 text-sm">Our agents focus on one specific industry, building deep expertise to communicate with depth, not just follow scripts.</p>
-              </GlassBox>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.6}>
-              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
-                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="text-sm font-bold text-[#00FFD1] mb-2">7+ Countries Served</div>
-                <h3 className="text-lg font-bold text-white mb-3">Global Market Reach</h3>
-                <p className="text-white/60 text-sm">From U.S. and Canada to U.K. and Dubai, we navigate diverse markets with local insight and global perspective.</p>
-              </GlassBox>
-            </ScrollReveal>
-          </div>
         </div>
       </section>
 
