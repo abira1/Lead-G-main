@@ -78,7 +78,7 @@ const Footer = () => {
                 </span>
               </div>
               <p className="text-sm text-white/60 font-medium leading-relaxed mb-6">
-                Global partner in telemarketing, marketing, and government contracting since 2017.
+                Telemarketing & digital marketing for service businesses & government contractors since 2017.
               </p>
               
               {/* Success Metrics */}
