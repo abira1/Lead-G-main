@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { industriesData } from '../data/mock';
 import { TrendingUp, Home, Zap, Building2 } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
@@ -12,6 +13,13 @@ const industryIcons = {
 };
 
 const Industries = () => {
+  const navigate = useNavigate();
+
+  const handleIndustryClick = (industryName) => {
+    // Navigate to industries page with the selected industry as URL parameter
+    navigate(`/industries?industry=${encodeURIComponent(industryName)}`);
+  };
+
   return (
     <section id="industries" className="bg-black py-24 lg:py-32">
       <div className="container mx-auto px-6 lg:px-16">
@@ -36,6 +44,7 @@ const Industries = () => {
                   hover={true}
                   hoverScale={1.08}
                   glow={true}
+                  onClick={() => handleIndustryClick(industry.name)}
                 >
                   
                   {/* Industry Icon */}
