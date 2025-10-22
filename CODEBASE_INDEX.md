@@ -474,7 +474,7 @@ DEBUG=False
 
 #### Frontend (`/app/frontend/.env`)
 ```bash
-REACT_APP_BACKEND_URL=https://index-base.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://homepage-hero-edit.preview.emergentagent.com
 REACT_APP_ENVIRONMENT=production
 ```
 
@@ -598,7 +598,7 @@ Secondary Admin: mdrudra60@gmail.com
 ## Deployment URLs
 
 ```
-Production Frontend: https://index-base.preview.emergentagent.com
+Production Frontend: https://homepage-hero-edit.preview.emergentagent.com
 Backend API: /api/* (proxied through frontend URL)
 API Documentation: Disabled in production
 ```
