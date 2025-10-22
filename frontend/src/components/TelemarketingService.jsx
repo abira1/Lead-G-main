@@ -114,15 +114,15 @@ const TelemarketingService = () => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button 
                     onClick={handleBookConsultation}
-                    className="bg-[#00FFD1] text-black hover:bg-[#00FFD1]/90 px-8 py-4 text-lg font-semibold rounded-none flex items-center space-x-2"
+                    className="bg-[#00FFD1] text-black hover:bg-[#00FFD1]/90 px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-none flex items-center justify-center space-x-2 w-full sm:w-auto"
                   >
-                    <span>Book Free Consultation</span>
-                    <ArrowRight className="w-5 h-5" />
+                    <span className="whitespace-nowrap">Book Free Consultation</span>
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                   </Button>
                   
                   <Button 
                     onClick={handleGetPricing}
-                    className="bg-white/10 text-white hover:bg-white/20 px-8 py-4 text-lg font-semibold rounded-none border border-white/30 backdrop-blur-sm"
+                    className="bg-white/10 text-white hover:bg-white/20 px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-none border border-white/30 backdrop-blur-sm w-full sm:w-auto"
                   >
                     View Pricing
                   </Button>
