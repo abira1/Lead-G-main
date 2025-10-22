@@ -193,7 +193,7 @@ const GovernmentContractingService = () => {
 
         {/* Logo Slider - Full Width */}
         {!loadingCompanies && logoData.length > 0 && (
-          <div className="w-full py-8 relative z-20">
+          <div className="w-full py-8 relative z-20 animate-[fadeIn_0.6s_ease-in-out]">
             <div className="overflow-hidden">
               <LogoLoop
                 logos={logoData}
