@@ -46,11 +46,11 @@ const Footer = () => {
               </div>
             </div>
 
-            <Link to="/book-appointment">
-              <Button className="btn-primary bg-[#00FFD1] text-black border-none rounded-none px-8 py-4 text-lg font-medium hover:bg-[#00FFD1]/10 hover:text-[#00FFD1] transition-all duration-400 min-h-[56px] flex items-center space-x-3 mx-auto">
-                <Phone className="w-5 h-5" />
-                <span>Book Free Consultation</span>
-                <ArrowRight className="w-5 h-5" />
+            <Link to="/book-appointment" className="w-full sm:w-auto flex justify-center">
+              <Button className="btn-primary bg-[#00FFD1] text-black border-none rounded-none px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium hover:bg-[#00FFD1]/10 hover:text-[#00FFD1] transition-all duration-400 min-h-[48px] sm:min-h-[56px] flex items-center justify-center space-x-2 sm:space-x-3 w-full sm:w-auto max-w-full">
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                <span className="whitespace-nowrap text-sm sm:text-base md:text-lg">Book Free Consultation</span>
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
               </Button>
             </Link>
           </GlassBox>
