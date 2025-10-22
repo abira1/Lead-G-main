@@ -306,8 +306,8 @@ const Header = () => {
         )}
       </GlassBox>
 
-      {/* Portal-based dropdown to render outside the header container */}
-      {activeDropdown && createPortal(
+      {/* Portal-based dropdown to render outside the header container - DESKTOP ONLY */}
+      {activeDropdown && isDesktop && createPortal(
         <div 
           className="fixed w-56" 
           data-dropdown 
