@@ -764,6 +764,30 @@ frontend:
           agent: "testing"
           comment: "✅ PASSED: Contact form implementation verified. Form includes all required fields (firstName, lastName, email, phone, company, industry, service, message) with proper validation. Form submission logic includes loading state, success state with CheckCircle icon, and form reset functionality. Form structure and styling confirmed in component code."
 
+  - task: "Scroll-to-Top on Navigation"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/ScrollToTop.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ SCROLL-TO-TOP IMPLEMENTATION COMPLETED: Created ScrollToTop component that automatically resets scroll position to (0, 0) on every route change. IMPLEMENTATION DETAILS: 1) Created /app/frontend/src/components/ScrollToTop.jsx that uses React Router's useLocation hook to detect route changes. 2) Uses window.scrollTo with 'instant' behavior for immediate scroll without animation. 3) Integrated into App.js within Router component to ensure it runs on all route changes. 4) Works for all navigation: regular links, logo clicks, and any route change. 5) Ensures every page starts at the top, eliminating the issue of pages opening at scrolled positions. TECHNICAL APPROACH: Component returns null (no visual output) and only handles the scroll behavior through useEffect. No props needed, fully automatic operation. READY FOR TESTING: Needs verification across all pages (Home, About, Contact, Careers, Services, Industries, Pricing, etc.) to ensure consistent scroll-to-top behavior."
+
+  - task: "Logo Slider Fade-In Animation"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/TelemarketingService.jsx, /app/frontend/src/components/GovernmentContractingService.jsx, /app/frontend/src/components/SocialMediaService.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ LOGO SLIDER FADE-IN ANIMATION COMPLETED: Successfully added smooth fade-in animation to logo sliders on all three service pages. IMPLEMENTATION DETAILS: 1) Added 'fadeIn' keyframes to Tailwind config (opacity transition from 0 to 1). 2) Created 'animate-fadeIn' animation class with 0.6s duration and ease-in-out timing. 3) Applied animation class to logo slider containers in TelemarketingService.jsx, GovernmentContractingService.jsx, and SocialMediaService.jsx. 4) Animation triggers only on initial component load when logo data is available. 5) Does not affect the continuous sliding motion of logos - only the initial appearance. TECHNICAL APPROACH: Used Tailwind CSS custom animations with className='animate-[fadeIn_0.6s_ease-in-out]' on the outer container div. Animation is subtle and professional, matching the site's existing animation patterns. READY FOR TESTING: Needs verification on all three service pages (/services/telemarketing, /services/government-contracting, /services/social-media) to confirm smooth fade-in effect on logo slider initial load."
+
 metadata:
   created_by: "testing_agent"
   version: "1.0"
