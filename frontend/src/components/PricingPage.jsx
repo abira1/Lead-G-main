@@ -129,10 +129,18 @@ const PricingPage = () => {
             <ScrollReveal delay={0.3}>
               {/* Mobile: Icon-only row layout */}
               <div className="lg:hidden">
-                <div className="flex justify-center items-start gap-8 px-4">
+                <div className="flex justify-center items-start gap-6 px-2">
                   {Object.keys(serviceData).map((service) => {
                     const IconComp = serviceIcons[service];
                     const isActive = activeService === service;
+                    
+                    // Abbreviated labels for narrow screens
+                    const labelMap = {
+                      "Telemarketing": "Telemarketing",
+                      "Government Contracting": "Gov Contract",
+                      "Social Media": "Social Media"
+                    };
+                    const label = labelMap[service] || service;
                     
                     return (
                       <button
@@ -163,11 +171,11 @@ const PricingPage = () => {
                         
                         {/* Label - always visible under all icons */}
                         <span 
-                          className={`mt-2 text-xs font-medium whitespace-nowrap text-center transition-colors duration-200 ${
+                          className={`mt-1.5 text-[10px] font-medium whitespace-nowrap text-center max-w-[90px] leading-tight transition-colors duration-200 ${
                             isActive ? 'text-[#00FFD1]' : 'text-white/40'
                           }`}
                         >
-                          {service}
+                          {label}
                         </span>
                       </button>
                     );
