@@ -213,13 +213,13 @@ export const pricingData = {
   socialMedia: [
     {
       id: 'social-1',
-      name: "Social Basics",
+      name: "Basic",
       price: "$600",
       period: "month",
       setupFee: "$250",
       popular: false,
       features: [
-        "1 social platform (your choice) managed (e.g. Facebook or LinkedIn)",
+        "Meta and Instagram managed",
         "3 posts per week (curated & created content)",
         "Basic engagement (responding to comments/messages)",
         "Monthly performance report",
@@ -229,17 +229,16 @@ export const pricingData = {
     },
     {
       id: 'social-2',
-      name: "Multi-Channel Growth",
+      name: "Multi",
       price: "$1,200",
       period: "month",
       setupFee: "$300",
       popular: true,
       features: [
-        "2–3 platforms managed (e.g. Facebook, LinkedIn, Twitter)",
+        "Meta, Instagram, and TikTok managed",
         "5 posts per week total (spread across platforms)",
-        "Included $100 ad spend management (boosting posts or simple ads)**",
         "Community management (respond to comments, moderate)",
-        "Monthly performance report with analysis",
+        "Bi-weekly performance report",
         "One-time setup: $300"
       ],
       notes: "**Ad Spend not included in the package prices – the amounts listed are what we'll manage; clients can set their own ad budget beyond this, which will be billed directly by the ad platforms."
@@ -252,14 +251,15 @@ export const pricingData = {
       setupFee: "$500",
       popular: false,
       features: [
-        "4+ platforms managed (Facebook, Instagram, LinkedIn, Twitter, etc.)",
+        "Meta, Instagram, TikTok, Snapchat, Applovin, and X (Twitter) managed",
         "Daily posting (7 posts/week, distributed across platforms)",
-        "Strategic ad campaigns management (up to $500 ad spend**, multiple campaigns)",
+        "Strategic ad campaigns management across all platforms",
+        "Minimum $500 ad spend per day required",
         "Advanced engagement (proactive outreach, influencer tagging)",
         "Bi-weekly performance reports + strategy call",
         "One-time setup: $500 (includes content strategy workshop)"
       ],
-      notes: "Need help with additional services like YouTube or TikTok marketing? We can add or swap platforms in any package. Contact us to discuss custom social media plans or larger advertising campaigns."
+      notes: "Need help with additional services like YouTube marketing? We can add or swap platforms in any package. Contact us to discuss custom social media plans or larger advertising campaigns."
     }
   ],
 
