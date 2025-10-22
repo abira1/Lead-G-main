@@ -33,8 +33,8 @@ const HomePage = () => (
   <>
     <Hero />
     <WhyChooseUs />
-    <Services />
     <Industries />
+    <Services />
     <WorkedWith />
     <section className="py-8 bg-black">
       <div className="container mx-auto px-6 text-center">
