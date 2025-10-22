@@ -791,6 +791,19 @@ frontend:
 metadata:
   created_by: "testing_agent"
   version: "1.0"
+
+  - task: "Mobile Button Layout Optimization - Industries & Pricing Pages"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/IndustriesPage.jsx, /app/frontend/src/components/PricingPage.jsx, /app/frontend/src/index.css"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ MOBILE BUTTON LAYOUT OPTIMIZATION COMPLETED: Successfully implemented horizontal scrollable button layout for Industries and Pricing sections on mobile devices. IMPLEMENTATION DETAILS: 1) DUAL LAYOUT SYSTEM: Created separate mobile (lg:hidden) and desktop (hidden lg:flex) button layouts - Mobile uses horizontal scrollable flex container, Desktop maintains wrapped centered layout. 2) MOBILE OPTIMIZATIONS: Horizontal scrollable layout with flex-shrink-0 to prevent button wrapping, minimum 44px height for touch-friendly tap zones, consistent padding (px-5 py-3) and gap (gap-3) for clean spacing, scroll-snap-type for smooth snap behavior, hidden scrollbar using scrollbar-hide utility class. 3) DESKTOP PRESERVATION: Desktop layout unchanged with flex-wrap and centered alignment, larger padding (px-8 py-5) and gap (gap-6) maintained, all hover effects and transitions preserved. 4) FUNCTIONAL CONSISTENCY: Active button highlighting with cyan glow effect maintained, smooth content transitions (0.5s duration) preserved, button click/tap functionality unchanged, disabled state during transitions working correctly. 5) CSS ENHANCEMENTS: Added scrollbar-hide utility to index.css with browser-specific implementations (-ms-overflow-style, scrollbar-width, ::-webkit-scrollbar), iOS smooth scrolling enabled with -webkit-overflow-scrolling: touch. TESTING RESULTS: Tested across multiple mobile sizes (320px, 375px, 414px, 480px) - buttons display in clean horizontal row, scrollable when content exceeds screen width (scroll width: 773px on 375px screen), no visible scrollbar, touch-friendly with proper heights. Button switching works smoothly on mobile with active state highlighting maintained. Desktop layout (1920px) verified unchanged. READY FOR TESTING: Needs verification on real devices for scroll smoothness, snap behavior, and touch interaction quality."
+
   test_sequence: 1
   run_ui: false
 
