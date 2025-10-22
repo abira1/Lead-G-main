@@ -105,7 +105,8 @@ module.exports = {
   			'shimmer': 'shimmer 1.5s ease-in-out',
   			'pulse-border': 'pulse-border 2s ease-in-out infinite',
   			'shine': 'shine 2s ease-in-out',
-  			'spin-slow': 'spin-slow 8s linear infinite'
+  			'spin-slow': 'spin-slow 8s linear infinite',
+			'fadeIn': 'fadeIn 0.6s ease-in-out'
   		}
   	}
   },
