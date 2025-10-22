@@ -135,19 +135,20 @@ export const pricingData = {
     {
       id: 'telemarketing-3',
       name: "Enterprise Outreach",
-      price: "$4,000",
-      period: "month",
-      setupFee: "$500",
+      price: "$500",
+      period: "per agent/month",
+      setupFee: "$350",
       popular: false,
       features: [
-        "~200 hours of calling (≈2,500+ calls)",
-        "2 agents (extended coverage)",
+        "100 hours of calling per agent",
+        "More than 5 agents",
         "Team supervisor oversight",
         "Real-time reporting dashboard",
         "Performance SLA (Service Level Agreement) for quality",
-        "One-time setup: $500"
+        "Monitoring and QA",
+        "One-time setup: $350 (for 5+ agents)"
       ],
-      notes: "Volume discounts available. Need a smaller commitment or a larger team? Contact us for custom hourly plans (our rates start as low as ~$15/hour for dedicated calling) or multi-agent discounts.",
+      notes: "Enterprise pricing is based on number of agents. Minimum 5 agents required. Custom configurations available for larger teams or specific requirements.",
       volumeDiscount: true
     }
   ],
