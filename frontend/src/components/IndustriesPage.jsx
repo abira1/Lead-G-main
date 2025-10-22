@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Home, TrendingUp, Zap, Building2, CheckCircle, ArrowRight, Star } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import GlassBox from './GlassBox';
 import { industriesData } from '../data/mock';
 
 const IndustriesPage = () => {
+  const location = useLocation();
   const [activeIndustry, setActiveIndustry] = useState('Real Estate');
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Check URL parameters on component mount and when location changes
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const industryParam = searchParams.get('industry');
+    
+    if (industryParam) {
+      // Check if the industry from URL parameter exists in our data
+      const industryExists = industriesData.some(industry => industry.name === industryParam);
+      if (industryExists) {
+        setActiveIndustry(industryParam);
+      }
+    }
+  }, [location]);
 
   const industryIcons = {
     "Real Estate": Home,
