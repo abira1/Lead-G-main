@@ -170,14 +170,14 @@ const CaseStudiesPage = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   onClick={() => window.location.href = '/book-appointment'}
-                  className="btn-primary bg-[#00FFD1] text-black border-none rounded-none px-8 py-4 text-lg font-medium hover:bg-[#00FFD1]/10 hover:text-[#00FFD1] transition-all duration-400 min-h-[56px] flex items-center justify-center space-x-3"
+                  className="btn-primary bg-[#00FFD1] text-black border-none rounded-none px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium hover:bg-[#00FFD1]/10 hover:text-[#00FFD1] transition-all duration-400 min-h-[48px] sm:min-h-[56px] flex items-center justify-center space-x-2 sm:space-x-3 w-full sm:w-auto"
                 >
-                  <span>Book Free Consultation</span>
-                  <ArrowRight className="w-5 h-5" />
+                  <span className="whitespace-nowrap">Book Free Consultation</span>
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                 </Button>
                 <Button 
                   onClick={() => window.location.href = '/contact'}
-                  className="bg-transparent border-2 border-white/20 text-white rounded-none px-8 py-4 text-lg font-medium hover:border-[#00FFD1] hover:text-[#00FFD1] transition-all duration-400 min-h-[56px] flex items-center justify-center space-x-3"
+                  className="bg-transparent border-2 border-white/20 text-white rounded-none px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium hover:border-[#00FFD1] hover:text-[#00FFD1] transition-all duration-400 min-h-[48px] sm:min-h-[56px] flex items-center justify-center space-x-2 sm:space-x-3 w-full sm:w-auto"
                 >
                   <span>Learn More</span>
                 </Button>
