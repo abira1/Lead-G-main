@@ -169,9 +169,9 @@ const Services = () => {
                     </div>
 
                     {/* Service Content */}
-                    <div className="p-8 lg:p-10 flex-grow flex flex-col">{/* Service Content */}
-
-                      <div className="text-left">
+                    <div className="p-8 lg:p-10 flex flex-col flex-grow">
+                      {/* Content that grows */}
+                      <div className="flex-grow">
                         <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4 leading-tight transition-all duration-300 group-hover:text-[#00FFD1]">
                           {service.title}
                         </h3>
@@ -188,8 +188,8 @@ const Services = () => {
                         </div>
                       </div>
 
-                      {/* Action Buttons */}
-                      <div className="mt-auto space-y-3">
+                      {/* Action Buttons - Anchored to bottom */}
+                      <div className="space-y-3 mt-6">
                         <Button 
                           onClick={() => handleLearnMore(service.title)}
                           className="bg-white/10 text-white border-none rounded-none px-6 py-3 text-base font-medium hover:bg-[#00FFD1] hover:text-black transition-all duration-400 min-h-[48px] flex items-center space-x-3 group w-full justify-center transform hover:scale-105 hover:shadow-lg hover:shadow-[#00FFD1]/25 cursor-pointer"
