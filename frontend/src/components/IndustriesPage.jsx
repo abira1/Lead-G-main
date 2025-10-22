@@ -123,7 +123,46 @@ const IndustriesPage = () => {
           {/* Industry Selector Buttons */}
           <div className="mb-16">
             <ScrollReveal delay={0.3}>
-              <div className="flex flex-wrap justify-center gap-4 lg:gap-6">
+              {/* Mobile: Horizontal scrollable layout */}
+              <div className="lg:hidden overflow-x-auto scrollbar-hide -mx-6 px-6">
+                <div className="flex gap-3 pb-2" style={{ scrollSnapType: 'x mandatory' }}>
+                  {industriesData.map((industry) => {
+                    const IconComp = industryIcons[industry.name];
+                    const isActive = activeIndustry === industry.name;
+                    
+                    return (
+                      <button
+                        key={industry.name}
+                        onClick={() => handleIndustryChange(industry.name)}
+                        disabled={isTransitioning}
+                        style={{ scrollSnapAlign: 'start' }}
+                        className={`group relative flex-shrink-0 px-5 py-3 rounded-none border transition-all duration-500 min-h-[44px] ${
+                          isActive 
+                            ? 'bg-[#00FFD1]/20 border-[#00FFD1] text-white shadow-lg shadow-[#00FFD1]/20' 
+                            : 'bg-white/5 border-white/20 text-white/70 active:bg-white/10 active:border-white/30 active:text-white'
+                        } ${isTransitioning ? 'opacity-75 cursor-not-allowed' : ''}`}
+                      >
+                        {/* Background glow effect for active button */}
+                        {isActive && (
+                          <div className="absolute inset-0 bg-[#00FFD1]/10 rounded-none blur-xl" />
+                        )}
+                        
+                        <div className="relative flex items-center space-x-2.5">
+                          <IconComp className={`w-4 h-4 transition-colors duration-300 flex-shrink-0 ${
+                            isActive ? 'text-[#00FFD1]' : 'text-white/50'
+                          }`} />
+                          <span className="font-semibold text-sm whitespace-nowrap">
+                            {industry.name}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Desktop: Wrapped centered layout */}
+              <div className="hidden lg:flex flex-wrap justify-center gap-6">
                 {industriesData.map((industry) => {
                   const IconComp = industryIcons[industry.name];
                   const isActive = activeIndustry === industry.name;
@@ -133,7 +172,7 @@ const IndustriesPage = () => {
                       key={industry.name}
                       onClick={() => handleIndustryChange(industry.name)}
                       disabled={isTransitioning}
-                      className={`group relative px-6 py-4 lg:px-8 lg:py-5 rounded-none border transition-all duration-500 ${
+                      className={`group relative px-8 py-5 rounded-none border transition-all duration-500 ${
                         isActive 
                           ? 'bg-[#00FFD1]/20 border-[#00FFD1] text-white shadow-lg shadow-[#00FFD1]/20' 
                           : 'bg-white/5 border-white/20 text-white/70 hover:bg-white/10 hover:border-white/30 hover:text-white'
@@ -148,7 +187,7 @@ const IndustriesPage = () => {
                         <IconComp className={`w-5 h-5 transition-colors duration-300 ${
                           isActive ? 'text-[#00FFD1]' : 'text-white/50 group-hover:text-white/70'
                         }`} />
-                        <span className="font-semibold text-sm lg:text-base whitespace-nowrap">
+                        <span className="font-semibold text-base whitespace-nowrap">
                           {industry.name}
                         </span>
                       </div>
