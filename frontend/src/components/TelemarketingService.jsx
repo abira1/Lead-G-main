@@ -353,7 +353,7 @@ const TelemarketingService = () => {
                 <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
                   <TrendingUp className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
                 </div>
-                <div className="text-sm font-bold text-[#00FFD1] mb-2">4+ Countries</div>
+                <div className="text-sm font-bold text-[#00FFD1] mb-2">7+ Countries Served</div>
                 <h3 className="text-lg font-bold text-white mb-3">Global Market Reach</h3>
                 <p className="text-white/60 text-sm">From U.S. and Canada to U.K. and Dubai, we navigate diverse markets with local insight and global perspective.</p>
               </GlassBox>
