@@ -1,8 +1,8 @@
 // Mock data for Lead G - Global Lead Generation & Marketing Agency
 
 export const heroData = {
-  headline: "Turn conversations into customers — expert outbound that scales.",
-  tagline: "Lead G — Your global partner in telemarketing, marketing, and government contracting support.",
+  headline: "Turn conversations into customers.",
+  tagline: "Telemarketing & digital marketing for service businesses & government contractors.",
   credibility: "Since 2017 • 500+ meetings booked • Avg. 28% qualified conversion",
   primaryCTA: "Book a Free Call",
   secondaryCTA: "See Pricing"
