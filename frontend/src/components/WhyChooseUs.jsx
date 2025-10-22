@@ -158,13 +158,13 @@ const WhyChooseUs = () => {
               >
                 <div className="mb-4">
                   <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
-                    4+
+                    7+
                   </div>
                   <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2">
                     Global Markets
                   </div>
                   <div className="text-xs md:text-sm text-white/60">
-                    Countries successfully served
+                    Countries Served
                   </div>
                 </div>
                 <div className="w-12 md:w-16 h-1 bg-gradient-to-r from-[#00FFD1] to-transparent mx-auto opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
