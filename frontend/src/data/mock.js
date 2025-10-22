@@ -117,17 +117,18 @@ export const pricingData = {
     {
       id: 'telemarketing-2',
       name: "Growth Outreach",
-      price: "$2,500",
+      price: "$1,200",
       period: "month",
-      setupFee: "$300",
+      setupFee: "$200",
       popular: true,
       features: [
-        "~120 hours of calling (≈1,500 calls)",
-        "1 dedicated agent",
+        "200 hours of calling",
+        "2 dedicated agents",
         "Script optimization each month",
         "Bi-weekly detailed reports & review meetings",
         "Priority lead routing",
-        "One-time setup: $300"
+        "Monitoring and QA",
+        "One-time setup: $200"
       ],
       notes: "All telemarketing packages include call script development and basic CRM integration. The one-time setup fee covers initial strategy consultation, agent training on your product/service, and technology setup."
     },
