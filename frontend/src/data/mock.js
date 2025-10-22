@@ -100,7 +100,7 @@ export const pricingData = {
     {
       id: 'telemarketing-1',
       name: "Starter Outreach",
-      price: "$1,000",
+      price: "$1,500",
       period: "month",
       setupFee: "$200",
       popular: false,
@@ -116,7 +116,7 @@ export const pricingData = {
     {
       id: 'telemarketing-2',
       name: "Growth Outreach",
-      price: "$2,000",
+      price: "$2,500",
       period: "month",
       setupFee: "$300",
       popular: true,
@@ -133,7 +133,7 @@ export const pricingData = {
     {
       id: 'telemarketing-3',
       name: "Enterprise Outreach",
-      price: "$3,500",
+      price: "$4,000",
       period: "month",
       setupFee: "$500",
       popular: false,
