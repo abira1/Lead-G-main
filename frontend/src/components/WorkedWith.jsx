@@ -172,17 +172,6 @@ const WorkedWith = () => {
             </div>
           </div>
         </ScrollReveal>
-
-        {/* Simplified Partner Trust Indicator */}
-        <ScrollReveal delay={0.3}>
-          <div className="text-center mt-12 lg:mt-16">
-            <div className="inline-flex items-center bg-[#00FFD1]/10 px-6 py-3 rounded-full border border-[#00FFD1]/20">
-              <span className="text-[#00FFD1] text-sm lg:text-base font-medium">
-                Join {logoData.length}+ Leading Companies Who Trust Our Expertise
-              </span>
-            </div>
-          </div>
-        </ScrollReveal>
       </div>
     </section>
   );
