@@ -66,7 +66,7 @@ Current Google provider configuration:
 
 After adding domains to Firebase:
 
-1. **Go to**: `https://nav-mobile-patch.preview.emergentagent.com/admin`
+1. **Go to**: `https://index-base.preview.emergentagent.com/admin`
 2. **Click**: "Sign in with Google"
 3. **Select**: One of the authorized email accounts
 4. **Result**: Should automatically log in to admin dashboard

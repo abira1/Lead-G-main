@@ -39,10 +39,10 @@ export const AuthProvider = ({ children }) => {
     if (currentHost.includes('localhost') || currentHost.includes('127.0.0.1')) {
       return 'http://localhost:8001';
     } else if (currentHost.includes('preview.emergentagent.com')) {
-      return 'https://nav-mobile-patch.preview.emergentagent.com';
+      return 'https://index-base.preview.emergentagent.com';
     } else {
       // Production fallback
-      return 'https://nav-mobile-patch.preview.emergentagent.com';
+      return 'https://index-base.preview.emergentagent.com';
     }
   };
 
