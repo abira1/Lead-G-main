@@ -106,12 +106,8 @@ const Hero = () => {
   }, []);
   
   const handleBookCall = () => {
-    const contactSection = document.querySelector('#contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.location.href = '/contact';
-    }
+    // Navigate to appointment booking page
+    window.location.href = '/book-appointment';
   };
 
   const handleBookAppointment = () => {
