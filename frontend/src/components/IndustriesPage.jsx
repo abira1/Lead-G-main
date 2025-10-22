@@ -77,7 +77,13 @@ const IndustriesPage = () => {
   const handleIndustryChange = (industry) => {
     if (industry === activeIndustry || isTransitioning) return;
     
+    // Clear existing timeout if any
+    if (labelTimeout) {
+      clearTimeout(labelTimeout);
+    }
+    
     setIsTransitioning(true);
+    setShowLabel(true); // Show label immediately on tap
     
     // Short delay to allow fade out, then change industry and fade in
     setTimeout(() => {
@@ -86,7 +92,22 @@ const IndustriesPage = () => {
         setIsTransitioning(false);
       }, 50); // Brief delay for content change before fade in
     }, 200); // Half of transition duration for fade out
+    
+    // Hide label after 1.2 seconds
+    const timeout = setTimeout(() => {
+      setShowLabel(false);
+    }, 1200);
+    setLabelTimeout(timeout);
   };
+  
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (labelTimeout) {
+        clearTimeout(labelTimeout);
+      }
+    };
+  }, [labelTimeout]);
 
   return (
     <div className="bg-black min-h-screen">
