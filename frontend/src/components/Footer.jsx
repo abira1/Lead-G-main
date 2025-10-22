@@ -37,18 +37,22 @@ const Footer = () => {
                   placeholder="Enter your email"
                   className="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/50 px-4 py-3 focus:outline-none focus:border-[#00FFD1] transition-colors duration-300 rounded-none backdrop-blur-sm"
                 />
-                <Button className="btn-primary bg-[#00FFD1] text-black border-none rounded-none px-6 py-3 text-base font-medium hover:bg-[#00FFD1]/10 hover:text-[#00FFD1] transition-all duration-400 flex items-center space-x-2">
-                  <span>Subscribe</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
+                <Link to="/book-appointment">
+                  <Button className="btn-primary bg-[#00FFD1] text-black border-none rounded-none px-6 py-3 text-base font-medium hover:bg-[#00FFD1]/10 hover:text-[#00FFD1] transition-all duration-400 flex items-center space-x-2 w-full sm:w-auto">
+                    <span>Subscribe</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
               </div>
             </div>
 
-            <Button className="btn-primary bg-[#00FFD1] text-black border-none rounded-none px-8 py-4 text-lg font-medium hover:bg-[#00FFD1]/10 hover:text-[#00FFD1] transition-all duration-400 min-h-[56px] flex items-center space-x-3 mx-auto">
-              <Phone className="w-5 h-5" />
-              <span>Book Free Consultation</span>
-              <ArrowRight className="w-5 h-5" />
-            </Button>
+            <Link to="/book-appointment">
+              <Button className="btn-primary bg-[#00FFD1] text-black border-none rounded-none px-8 py-4 text-lg font-medium hover:bg-[#00FFD1]/10 hover:text-[#00FFD1] transition-all duration-400 min-h-[56px] flex items-center space-x-3 mx-auto">
+                <Phone className="w-5 h-5" />
+                <span>Book Free Consultation</span>
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </Link>
           </GlassBox>
         </ScrollReveal>
 
