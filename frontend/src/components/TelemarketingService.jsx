@@ -181,30 +181,28 @@ const TelemarketingService = () => {
                 </Button>
               </div>
             </ScrollReveal>
-
-            {/* Logo Slider */}
-            {!loadingCompanies && logoData.length > 0 && (
-              <ScrollReveal delay={0.7}>
-                <div className="w-full py-4">
-                  <div className="overflow-hidden">
-                    <LogoLoop
-                      logos={logoData}
-                      speed={60}
-                      direction="left"
-                      logoHeight={60}
-                      gap={40}
-                      pauseOnHover={true}
-                      scaleOnHover={true}
-                      fadeOut={true}
-                      fadeOutColor="#000000"
-                      ariaLabel="Companies we have worked with"
-                    />
-                  </div>
-                </div>
-              </ScrollReveal>
-            )}
           </div>
         </div>
+
+        {/* Logo Slider - Full Width */}
+        {!loadingCompanies && logoData.length > 0 && (
+          <div className="w-full py-8 relative z-20">
+            <div className="overflow-hidden">
+              <LogoLoop
+                logos={logoData}
+                speed={60}
+                direction="left"
+                logoHeight={60}
+                gap={40}
+                pauseOnHover={true}
+                scaleOnHover={true}
+                fadeOut={true}
+                fadeOutColor="#000000"
+                ariaLabel="Companies we have worked with"
+              />
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Features Section */}
