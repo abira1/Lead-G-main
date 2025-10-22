@@ -26,8 +26,8 @@ const Industries = () => {
         {/* Section Header */}
         <div className="text-center mb-20">
           <ScrollReveal delay={0.2}>
-            <h2 className="text-5xl lg:text-7xl font-bold text-white leading-tight tracking-tight mb-6">
-              Industries we <span className="text-[#00FFD1]">dominate</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight tracking-tight mb-6">
+              Industries we <span className="bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent">dominate</span>
             </h2>
           </ScrollReveal>
         </div>
