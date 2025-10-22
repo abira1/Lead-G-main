@@ -143,9 +143,9 @@ const Hero = () => {
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.2}>
-              <h1 className="text-3xl lg:text-5xl font-bold leading-tight tracking-tight mt-2">
-                <span className="text-[#00FFD1]">Telemarketing & digital marketing</span>
-                <span className="text-white"> for service businesses & government contractors</span>
+              <h1 className="text-4xl lg:text-6xl font-bold leading-[0.9] tracking-tight mt-2">
+                <span className="text-[#00FFD1]">Expert outbound</span>
+                <span className="text-white"> that scales</span>
               </h1>
             </ScrollReveal>
           </motion.div>
@@ -158,7 +158,7 @@ const Hero = () => {
           >
             <ScrollReveal delay={0.3}>
               <p className="text-lg text-white/75 font-medium leading-relaxed mb-10 max-w-2xl mx-auto">
-                Get qualified outbound leads and targeted digital campaigns that convert — no fluff, just customers.
+                Telemarketing & digital marketing for service businesses & government contractors
               </p>
             </ScrollReveal>
           </motion.div>
