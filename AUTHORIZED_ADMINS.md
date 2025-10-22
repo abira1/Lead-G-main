@@ -21,7 +21,7 @@ The following email addresses are authorized to access the Lead G admin panel:
 
 ## Admin Panel Access
 
-**URL**: https://codedoc-solution.preview.emergentagent.com/admin
+**URL**: https://nav-mobile-patch.preview.emergentagent.com/admin
 
 ## Security Notes
 
