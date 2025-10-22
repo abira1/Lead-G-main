@@ -146,9 +146,9 @@ const IndustriesPage = () => {
           {/* Industry Selector Buttons */}
           <div className="mb-16">
             <ScrollReveal delay={0.3}>
-              {/* Mobile: Horizontal scrollable layout */}
-              <div className="lg:hidden overflow-x-auto scrollbar-hide -mx-6 px-6">
-                <div className="flex gap-3 pb-2" style={{ scrollSnapType: 'x mandatory' }}>
+              {/* Mobile: Icon-only row layout */}
+              <div className="lg:hidden">
+                <div className="flex justify-center items-start gap-6 px-4">
                   {industriesData.map((industry) => {
                     const IconComp = industryIcons[industry.name];
                     const isActive = activeIndustry === industry.name;
@@ -158,26 +158,38 @@ const IndustriesPage = () => {
                         key={industry.name}
                         onClick={() => handleIndustryChange(industry.name)}
                         disabled={isTransitioning}
-                        style={{ scrollSnapAlign: 'start' }}
-                        className={`group relative flex-shrink-0 px-5 py-3 rounded-none border transition-all duration-500 min-h-[44px] ${
-                          isActive 
-                            ? 'bg-[#00FFD1]/20 border-[#00FFD1] text-white shadow-lg shadow-[#00FFD1]/20' 
-                            : 'bg-white/5 border-white/20 text-white/70 active:bg-white/10 active:border-white/30 active:text-white'
-                        } ${isTransitioning ? 'opacity-75 cursor-not-allowed' : ''}`}
+                        aria-label={industry.name}
+                        aria-pressed={isActive}
+                        className={`group relative flex flex-col items-center transition-all duration-200 ${
+                          isTransitioning ? 'opacity-75 cursor-not-allowed' : ''
+                        }`}
                       >
-                        {/* Background glow effect for active button */}
-                        {isActive && (
-                          <div className="absolute inset-0 bg-[#00FFD1]/10 rounded-none blur-xl" />
-                        )}
-                        
-                        <div className="relative flex items-center space-x-2.5">
-                          <IconComp className={`w-4 h-4 transition-colors duration-300 flex-shrink-0 ${
+                        {/* Icon container with 44x44px touch target */}
+                        <div className={`relative flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 ${
+                          isActive 
+                            ? 'bg-[#00FFD1]/10' 
+                            : 'bg-white/5 active:bg-white/10'
+                        }`}>
+                          {/* Glow effect for active icon */}
+                          {isActive && (
+                            <div className="absolute inset-0 bg-[#00FFD1]/30 rounded-full blur-md" />
+                          )}
+                          
+                          <IconComp className={`relative w-6 h-6 transition-colors duration-200 ${
                             isActive ? 'text-[#00FFD1]' : 'text-white/50'
                           }`} />
-                          <span className="font-semibold text-sm whitespace-nowrap">
+                        </div>
+                        
+                        {/* Label - only shows under active icon */}
+                        {isActive && (
+                          <span 
+                            className={`mt-2 text-xs font-medium text-[#00FFD1] whitespace-nowrap transition-opacity duration-200 ${
+                              showLabel ? 'opacity-100' : 'opacity-0'
+                            }`}
+                          >
                             {industry.name}
                           </span>
-                        </div>
+                        )}
                       </button>
                     );
                   })}
