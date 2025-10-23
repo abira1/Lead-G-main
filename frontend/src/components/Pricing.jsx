@@ -43,7 +43,7 @@ const ServiceCategoryCard = ({ category, packages, icon: IconComponent, index, n
       </div>
 
       {/* Packages Grid */}
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {packages.map((pkg, pkgIndex) => (
           <ScrollReveal key={pkg.id} delay={0.1 * (pkgIndex + 1)} className="flex">
             <GlassBox 
