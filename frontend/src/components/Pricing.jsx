@@ -58,22 +58,22 @@ const ServiceCategoryCard = ({ category, packages, icon: IconComponent, index, n
             >
 
               {/* Package Header */}
-              <div className="text-center mb-6">
-                <h4 className="text-lg font-bold text-white mb-2 h-7 flex items-center justify-center">
+              <div className="text-center mb-4 md:mb-6">
+                <h4 className="text-base md:text-lg font-bold text-white mb-2 h-6 md:h-7 flex items-center justify-center">
                   {pkg.name}
                 </h4>
                 <div className="h-5 mb-3 flex items-center justify-center">
                   {pkg.subtitle && (
-                    <p className="text-xs text-[#00FFD1] font-medium">
+                    <p className="text-xs text-[#00FFD1] font-medium px-2">
                       {pkg.subtitle}
                     </p>
                   )}
                 </div>
                 <div className="mb-3">
-                  <span className="text-3xl font-bold text-white">
+                  <span className="text-2xl md:text-3xl font-bold text-white">
                     {pkg.price}
                   </span>
-                  <span className="text-sm text-white/70 ml-1">
+                  <span className="text-xs md:text-sm text-white/70 ml-1">
                     /{pkg.period}
                   </span>
                 </div>
@@ -101,7 +101,7 @@ const ServiceCategoryCard = ({ category, packages, icon: IconComponent, index, n
               </div>
 
               {/* Features List */}
-              <div className="space-y-2.5 mb-6 flex-1">
+              <div className="space-y-2 md:space-y-2.5 mb-4 md:mb-6 flex-1">
                 {pkg.features.map((feature, index) => (
                   <div key={index} className="flex items-start space-x-2">
                     <CheckCircle className="w-3.5 h-3.5 text-[#00FFD1] flex-shrink-0 mt-0.5" />
@@ -113,13 +113,9 @@ const ServiceCategoryCard = ({ category, packages, icon: IconComponent, index, n
               </div>
 
               {/* CTA Button */}
-              <div className="mt-auto pt-6">
+              <div className="mt-auto pt-4 md:pt-6">
                 <Button 
-                  className={`w-full h-11 flex items-center justify-center space-x-2 text-sm font-medium border-none rounded-none transition-all duration-500 transform hover:scale-105 hover:shadow-lg ${
-                    pkg.popular
-                      ? 'bg-[#00FFD1] text-black hover:bg-[#00FFD1]/90 hover:shadow-[#00FFD1]/30 hover:text-black'
-                      : 'bg-white/10 text-white hover:bg-[#00FFD1] hover:text-black hover:shadow-[#00FFD1]/25'
-                  }`}
+                  className="w-full h-10 md:h-11 flex items-center justify-center space-x-2 text-xs md:text-sm font-medium border-none rounded-none transition-all duration-500 transform hover:scale-105 hover:shadow-lg bg-white/10 text-white hover:bg-[#00FFD1] hover:text-black hover:shadow-[#00FFD1]/25"
                   onClick={() => handleChoosePlan(pkg, category)}
                 >
                   <span>
