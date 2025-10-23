@@ -43,12 +43,12 @@ const ServiceCategoryCard = ({ category, packages, icon: IconComponent, index, n
       </div>
 
       {/* Packages Grid */}
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-8 items-stretch">
         {packages.map((pkg, pkgIndex) => (
-          <ScrollReveal key={pkg.id} delay={0.1 * (pkgIndex + 1)}>
+          <ScrollReveal key={pkg.id} delay={0.1 * (pkgIndex + 1)} className="h-full">
             <GlassBox 
-              className={`relative p-6 lg:p-8 h-full flex flex-col cursor-pointer ${
-                pkg.popular ? 'scale-105 border border-[#00FFD1]/20' : ''
+              className={`relative p-8 h-full flex flex-col justify-between cursor-pointer ${
+                pkg.popular ? 'border-2 border-[#00FFD1]/30' : 'border border-transparent'
               }`}
               blur={pkg.popular ? 20 : 16}
               opacity={pkg.popular ? 0.2 : 0.15}
@@ -56,13 +56,13 @@ const ServiceCategoryCard = ({ category, packages, icon: IconComponent, index, n
               hover={true}
               glow={pkg.popular}
               shine={true}
-              hoverScale={pkg.popular ? 1.08 : 1.05}
+              hoverScale={1.02}
             >
               {/* Popular Badge */}
               {pkg.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                   <GlassBox 
-                    className="bg-[#00FFD1] text-black px-3 py-1 text-xs font-bold flex items-center space-x-1" 
+                    className="bg-[#00FFD1] text-black px-4 py-1.5 text-xs font-bold flex items-center space-x-1" 
                     opacity={1}
                     blur={0}
                   >
@@ -72,57 +72,68 @@ const ServiceCategoryCard = ({ category, packages, icon: IconComponent, index, n
                 </div>
               )}
 
-              {/* Package Header */}
-              <div className="text-center mb-6">
-                <h4 className="text-lg font-bold text-white mb-2">
-                  {pkg.name}
-                </h4>
-                {pkg.subtitle && (
-                  <p className="text-xs text-[#00FFD1] mb-3 font-medium">
-                    {pkg.subtitle}
-                  </p>
-                )}
-                <div className="mb-3">
-                  <span className="text-3xl font-bold text-white">
-                    {pkg.price}
-                  </span>
-                  <span className="text-sm text-white/70 ml-1">
-                    /{pkg.period}
-                  </span>
-                </div>
-                {pkg.setupFee && (
-                  <div className="text-xs text-white/50">
-                    Setup: {pkg.setupFee}
+              {/* Package Content */}
+              <div className="flex flex-col flex-grow">
+                {/* Package Header */}
+                <div className="text-center mb-6">
+                  <h4 className="text-lg font-bold text-white mb-2 min-h-[28px]">
+                    {pkg.name}
+                  </h4>
+                  <div className="min-h-[20px] mb-3">
+                    {pkg.subtitle && (
+                      <p className="text-xs text-[#00FFD1] font-medium">
+                        {pkg.subtitle}
+                      </p>
+                    )}
                   </div>
-                )}
-                {pkg.contract && (
-                  <div className="text-xs text-white/50 mt-1">
-                    {pkg.contract}
-                  </div>
-                )}
-                {pkg.volumeDiscount && (
-                  <div className="text-xs text-[#FF6EB4] mt-1 font-medium">
-                    Volume discounts available
-                  </div>
-                )}
-              </div>
-
-              {/* Features List */}
-              <div className="space-y-2 mb-6 flex-grow">
-                {pkg.features.map((feature, index) => (
-                  <div key={index} className="flex items-start space-x-2">
-                    <CheckCircle className="w-3 h-3 text-[#00FFD1] flex-shrink-0 mt-0.5" />
-                    <span className="text-white/75 text-xs font-medium leading-relaxed">
-                      {feature}
+                  <div className="mb-3">
+                    <span className="text-3xl font-bold text-white">
+                      {pkg.price}
+                    </span>
+                    <span className="text-sm text-white/70 ml-1">
+                      /{pkg.period}
                     </span>
                   </div>
-                ))}
+                  <div className="min-h-[16px]">
+                    {pkg.setupFee && (
+                      <div className="text-xs text-white/50">
+                        Setup: {pkg.setupFee}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-h-[16px] mt-1">
+                    {pkg.contract && (
+                      <div className="text-xs text-white/50">
+                        {pkg.contract}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-h-[16px] mt-1">
+                    {pkg.volumeDiscount && (
+                      <div className="text-xs text-[#FF6EB4] font-medium">
+                        Volume discounts available
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Features List */}
+                <div className="space-y-2.5 mb-6 flex-grow">
+                  {pkg.features.map((feature, index) => (
+                    <div key={index} className="flex items-start space-x-2">
+                      <CheckCircle className="w-3.5 h-3.5 text-[#00FFD1] flex-shrink-0 mt-0.5" />
+                      <span className="text-white/75 text-xs font-medium leading-relaxed">
+                        {feature}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* CTA Button */}
-              <div className="mt-auto">
+              <div className="mt-auto pt-6">
                 <Button 
-                  className={`w-full min-h-[40px] flex items-center justify-center space-x-2 text-sm font-medium border-none rounded-none transition-all duration-500 transform hover:scale-105 hover:shadow-lg ${
+                  className={`w-full min-h-[44px] flex items-center justify-center space-x-2 text-sm font-medium border-none rounded-none transition-all duration-500 transform hover:scale-105 hover:shadow-lg ${
                     pkg.popular
                       ? 'bg-[#00FFD1] text-black hover:bg-[#00FFD1]/90 hover:shadow-[#00FFD1]/30 hover:text-black'
                       : 'bg-white/10 text-white hover:bg-[#00FFD1] hover:text-black hover:shadow-[#00FFD1]/25'
@@ -132,7 +143,7 @@ const ServiceCategoryCard = ({ category, packages, icon: IconComponent, index, n
                   <span>
                     {pkg.period === 'one-time' ? 'Get Started' : 'Choose Plan'}
                   </span>
-                  <ArrowRight className="w-3 h-3" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Button>
               </div>
             </GlassBox>
