@@ -244,11 +244,11 @@ const PricingPage = () => {
                 </div>
 
                 {/* Packages Grid */}
-                <div className="grid lg:grid-cols-3 gap-8 mb-12">
+                <div className="grid lg:grid-cols-3 gap-8 mb-12 items-stretch">
                   {activeData.packages.map((pkg, pkgIndex) => (
                     <div 
                       key={pkg.id}
-                      className={`transition-all duration-500 ease-out ${
+                      className={`h-full transition-all duration-500 ease-out ${
                         isTransitioning 
                           ? 'opacity-0 transform translate-y-6' 
                           : 'opacity-100 transform translate-y-0'
@@ -256,8 +256,8 @@ const PricingPage = () => {
                       style={{ transitionDelay: `${150 + pkgIndex * 100}ms` }}
                     >
                       <GlassBox 
-                        className={`relative p-8 h-full flex flex-col cursor-pointer ${
-                          pkg.popular ? 'scale-105 border-2 border-[#00FFD1]/50' : ''
+                        className={`relative p-8 h-full flex flex-col justify-between cursor-pointer ${
+                          pkg.popular ? 'border-2 border-[#00FFD1]/40' : 'border border-transparent'
                         }`}
                         blur={pkg.popular ? 20 : 16}
                         opacity={pkg.popular ? 0.2 : 0.15}
@@ -265,57 +265,82 @@ const PricingPage = () => {
                         hover={true}
                         glow={pkg.popular}
                         shine={true}
-                        hoverScale={pkg.popular ? 1.08 : 1.05}
+                        hoverScale={1.02}
                       >
-                        {/* Package Header */}
-                        <div className="text-center mb-6">
-                          <h3 className="text-xl font-bold text-white mb-3">
-                            {pkg.name}
-                          </h3>
-                          {pkg.subtitle && (
-                            <p className="text-sm text-[#00FFD1] mb-4 font-medium">
-                              {pkg.subtitle}
-                            </p>
-                          )}
-                          <div className="mb-4">
-                            <span className="text-4xl font-bold text-white">
-                              {pkg.price}
-                            </span>
-                            <span className="text-lg text-white/70 ml-2">
-                              /{pkg.period}
-                            </span>
+                        {/* Popular Badge */}
+                        {pkg.popular && (
+                          <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                            <GlassBox 
+                              className="bg-[#00FFD1] text-black px-4 py-1.5 text-xs font-bold flex items-center space-x-1" 
+                              opacity={1}
+                              blur={0}
+                            >
+                              <Star className="w-3 h-3" />
+                              <span>POPULAR</span>
+                            </GlassBox>
                           </div>
-                          {pkg.setupFee && (
-                            <div className="text-sm text-white/60">
-                              Setup: {pkg.setupFee}
-                            </div>
-                          )}
-                          {pkg.contract && (
-                            <div className="text-sm text-white/60 mt-1">
-                              {pkg.contract}
-                            </div>
-                          )}
-                          {pkg.volumeDiscount && (
-                            <div className="text-sm text-[#FF6EB4] mt-1 font-medium">
-                              Volume discounts available
-                            </div>
-                          )}
-                        </div>
+                        )}
 
-                        {/* Features List */}
-                        <div className="space-y-3 mb-8 flex-grow">
-                          {pkg.features.map((feature, index) => (
-                            <div key={index} className="flex items-start space-x-3">
-                              <CheckCircle className="w-4 h-4 text-[#00FFD1] flex-shrink-0 mt-0.5" />
-                              <span className="text-white/80 text-sm font-medium leading-relaxed">
-                                {feature}
+                        {/* Package Content */}
+                        <div className="flex flex-col flex-grow">
+                          {/* Package Header */}
+                          <div className="text-center mb-6">
+                            <h3 className="text-xl font-bold text-white mb-3 min-h-[28px]">
+                              {pkg.name}
+                            </h3>
+                            <div className="min-h-[24px] mb-4">
+                              {pkg.subtitle && (
+                                <p className="text-sm text-[#00FFD1] font-medium">
+                                  {pkg.subtitle}
+                                </p>
+                              )}
+                            </div>
+                            <div className="mb-4">
+                              <span className="text-4xl font-bold text-white">
+                                {pkg.price}
+                              </span>
+                              <span className="text-lg text-white/70 ml-2">
+                                /{pkg.period}
                               </span>
                             </div>
-                          ))}
+                            <div className="min-h-[20px]">
+                              {pkg.setupFee && (
+                                <div className="text-sm text-white/60">
+                                  Setup: {pkg.setupFee}
+                                </div>
+                              )}
+                            </div>
+                            <div className="min-h-[20px] mt-1">
+                              {pkg.contract && (
+                                <div className="text-sm text-white/60">
+                                  {pkg.contract}
+                                </div>
+                              )}
+                            </div>
+                            <div className="min-h-[20px] mt-1">
+                              {pkg.volumeDiscount && (
+                                <div className="text-sm text-[#FF6EB4] font-medium">
+                                  Volume discounts available
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Features List */}
+                          <div className="space-y-3 mb-6 flex-grow">
+                            {pkg.features.map((feature, index) => (
+                              <div key={index} className="flex items-start space-x-3">
+                                <CheckCircle className="w-4 h-4 text-[#00FFD1] flex-shrink-0 mt-0.5" />
+                                <span className="text-white/80 text-sm font-medium leading-relaxed">
+                                  {feature}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
 
                         {/* CTA Button */}
-                        <div className="mt-auto">
+                        <div className="mt-auto pt-6">
                           <Button 
                             className={`w-full min-h-[48px] flex items-center justify-center space-x-3 text-base font-medium border-none rounded-none transition-all duration-500 transform hover:scale-105 hover:shadow-lg ${
                               pkg.popular
