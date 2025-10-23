@@ -190,26 +190,6 @@ const GovernmentContractingService = () => {
             </ScrollReveal>
           </div>
         </div>
-
-        {/* Logo Slider - Full Width */}
-        {!loadingCompanies && logoData.length > 0 && (
-          <div className="w-full py-8 relative z-20 animate-[fadeIn_0.6s_ease-in-out]">
-            <div className="overflow-hidden">
-              <LogoLoop
-                logos={logoData}
-                speed={60}
-                direction="left"
-                logoHeight={60}
-                gap={40}
-                pauseOnHover={true}
-                scaleOnHover={true}
-                fadeOut={true}
-                fadeOutColor="#000000"
-                ariaLabel="Companies we have worked with"
-              />
-            </div>
-          </div>
-        )}
       </section>
 
       {/* Contract Types Section */}
