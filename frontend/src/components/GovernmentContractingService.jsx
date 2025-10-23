@@ -333,6 +333,34 @@ const GovernmentContractingService = () => {
         </div>
       </section>
 
+      {/* Testimonial Section */}
+      <section className="bg-black py-16 lg:py-24">
+        <div className="container mx-auto px-6 lg:px-16">
+          <ScrollReveal delay={0.2}>
+            <GlassBox 
+              className="p-8 lg:p-12 text-center max-w-4xl mx-auto"
+              blur={20}
+              opacity={0.1}
+              glow={true}
+              shine={true}
+            >
+              <div className="flex justify-center mb-6">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-6 h-6 text-[#00FFD1] fill-current" />
+                ))}
+              </div>
+              <blockquote className="text-2xl lg:text-3xl text-white font-light mb-8 leading-relaxed">
+                "{testimonial.quote}"
+              </blockquote>
+              <div>
+                <div className="text-[#00FFD1] font-semibold text-lg">{testimonial.author}</div>
+                <div className="text-white/70">{testimonial.role}, {testimonial.company}</div>
+              </div>
+            </GlassBox>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* Why Choose LeadG for Government Contracting */}
       <section className="bg-black py-16 lg:py-24">
         <div className="container mx-auto px-6 lg:px-16">
