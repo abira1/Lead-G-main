@@ -47,30 +47,15 @@ const ServiceCategoryCard = ({ category, packages, icon: IconComponent, index, n
         {packages.map((pkg, pkgIndex) => (
           <ScrollReveal key={pkg.id} delay={0.1 * (pkgIndex + 1)} className="flex">
             <GlassBox 
-              className={`relative p-8 w-full flex flex-col cursor-pointer ${
-                pkg.popular ? 'border-2 border-[#00FFD1]/30' : 'border border-transparent'
-              }`}
-              blur={pkg.popular ? 20 : 16}
-              opacity={pkg.popular ? 0.2 : 0.15}
+              className="relative p-6 md:p-8 w-full flex flex-col cursor-pointer border border-white/10"
+              blur={16}
+              opacity={0.15}
               noise={false}
               hover={true}
-              glow={pkg.popular}
+              glow={false}
               shine={true}
               hoverScale={1.02}
             >
-              {/* Popular Badge */}
-              {pkg.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                  <GlassBox 
-                    className="bg-[#00FFD1] text-black px-4 py-1.5 text-xs font-bold flex items-center space-x-1" 
-                    opacity={1}
-                    blur={0}
-                  >
-                    <Star className="w-3 h-3" />
-                    <span>POPULAR</span>
-                  </GlassBox>
-                </div>
-              )}
 
               {/* Package Header */}
               <div className="text-center mb-6">
