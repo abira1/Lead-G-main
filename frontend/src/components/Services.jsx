@@ -189,7 +189,7 @@ const Services = () => {
                       </div>
 
                       {/* Action Buttons - Anchored to bottom */}
-                      <div className="space-y-3 mt-6">
+                      <div className="space-y-3 mt-auto pt-6">
                         <Button 
                           onClick={() => handleLearnMore(service.title)}
                           className="bg-white/10 text-white border-none rounded-none px-6 py-3 text-base font-medium hover:bg-[#00FFD1] hover:text-black transition-all duration-400 min-h-[48px] flex items-center space-x-3 group w-full justify-center transform hover:scale-105 hover:shadow-lg hover:shadow-[#00FFD1]/25 cursor-pointer"
