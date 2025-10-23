@@ -251,7 +251,7 @@ export const pricingData = {
       setupFee: "$500",
       popular: false,
       features: [
-        "Meta, Instagram, TikTok, Snapchat, Applovin, and X (Twitter) managed",
+        "Meta, Instagram, TikTok, Snapchat, Applovin, and X managed",
         "Daily posting (7 posts/week, distributed across platforms)",
         "Strategic ad campaigns management across all platforms",
         "Minimum $500 ad spend per day required",
