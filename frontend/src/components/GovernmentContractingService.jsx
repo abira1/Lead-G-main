@@ -423,6 +423,41 @@ const GovernmentContractingService = () => {
         </div>
       </section>
 
+      {/* Companies We've Worked With - Logo Slider */}
+      <section className="bg-black py-16 lg:py-24">
+        <div className="container mx-auto px-6 lg:px-16">
+          <ScrollReveal delay={0.2}>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                Companies We've <span className="text-[#00FFD1]">Worked With</span>
+              </h2>
+              <p className="text-xl text-white/70 max-w-3xl mx-auto">
+                Trusted partnerships with leading organizations across government contracting
+              </p>
+            </div>
+          </ScrollReveal>
+
+          {!loadingCompanies && logoData.length > 0 && (
+            <div className="w-full py-8 animate-[fadeIn_0.6s_ease-in-out]">
+              <div className="overflow-hidden">
+                <LogoLoop
+                  logos={logoData}
+                  speed={60}
+                  direction="left"
+                  logoHeight={60}
+                  gap={40}
+                  pauseOnHover={true}
+                  scaleOnHover={true}
+                  fadeOut={true}
+                  fadeOutColor="#000000"
+                  ariaLabel="Companies we have worked with"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Case Studies Button */}
       <section className="py-8 bg-black">
         <div className="container mx-auto px-6 text-center">
