@@ -115,7 +115,11 @@ const ServiceCategoryCard = ({ category, packages, icon: IconComponent, index, n
               {/* CTA Button */}
               <div className="mt-auto pt-4 md:pt-6">
                 <Button 
-                  className="w-full h-10 md:h-11 flex items-center justify-center space-x-2 text-xs md:text-sm font-medium border-none rounded-none transition-all duration-500 transform hover:scale-105 hover:shadow-lg bg-white/10 text-white hover:bg-[#00FFD1] hover:text-black hover:shadow-[#00FFD1]/25"
+                  className={`w-full h-10 md:h-11 flex items-center justify-center space-x-2 text-xs md:text-sm font-medium border-none rounded-none transition-all duration-500 transform hover:scale-105 hover:shadow-lg ${
+                    pkgIndex === 1
+                      ? 'bg-[#00FFD1] text-black hover:bg-[#00FFD1]/90 shadow-lg shadow-[#00FFD1]/50 hover:shadow-[#00FFD1]/70'
+                      : 'bg-white/10 text-white hover:bg-[#00FFD1] hover:text-black hover:shadow-[#00FFD1]/25'
+                  }`}
                   onClick={() => handleChoosePlan(pkg, category)}
                 >
                   <span>
