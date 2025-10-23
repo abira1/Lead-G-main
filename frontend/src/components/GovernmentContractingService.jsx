@@ -212,68 +212,6 @@ const GovernmentContractingService = () => {
         )}
       </section>
 
-      {/* Why Choose LeadG for Government Contracting */}
-      <section className="bg-black py-16 lg:py-24">
-        <div className="container mx-auto px-6 lg:px-16">
-          <ScrollReveal delay={0.2}>
-            <div className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                Why Choose <span className="text-[#00FFD1]">LeadG</span> for Government Contracting?
-              </h2>
-              <p className="text-xl text-white/70 max-w-3xl mx-auto">
-                7+ years of specialized expertise with proven track record of securing $50M+ in government contracts
-              </p>
-            </div>
-          </ScrollReveal>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <ScrollReveal delay={0.3}>
-              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
-                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
-                  <Award className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="text-sm font-bold text-[#00FFD1] mb-2">7+ Years Experience</div>
-                <h3 className="text-lg font-bold text-white mb-3">Proven Experience</h3>
-                <p className="text-white/60 text-sm">Deep expertise in Government Contracting with industry-tested strategies and clear understanding of federal processes.</p>
-              </GlassBox>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.4}>
-              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
-                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="text-sm font-bold text-[#00FFD1] mb-2">100% In-House</div>
-                <h3 className="text-lg font-bold text-white mb-3">Specialized Team</h3>
-                <p className="text-white/60 text-sm">Dedicated in-house experts trained specifically in government contracting compliance, proposal writing, and federal regulations.</p>
-              </GlassBox>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.5}>
-              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
-                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
-                  <Target className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="text-sm font-bold text-[#00FFD1] mb-2">$50M+ Secured</div>
-                <h3 className="text-lg font-bold text-white mb-3">Specialized Training</h3>
-                <p className="text-white/60 text-sm">Our team focuses exclusively on government contracting, building deep expertise in federal, state, and local opportunities.</p>
-              </GlassBox>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.6}>
-              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
-                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="text-sm font-bold text-[#00FFD1] mb-2">Multi-Level Reach</div>
-                <h3 className="text-lg font-bold text-white mb-3">Comprehensive Coverage</h3>
-                <p className="text-white/60 text-sm">Federal, state, and local contract opportunities with global perspective for international government projects.</p>
-              </GlassBox>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
-
       {/* Contract Types Section */}
       <section className="bg-black py-16 lg:py-24">
         <div className="container mx-auto px-6 lg:px-16">
@@ -440,6 +378,68 @@ const GovernmentContractingService = () => {
               </div>
             </GlassBox>
           </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Why Choose LeadG for Government Contracting */}
+      <section className="bg-black py-16 lg:py-24">
+        <div className="container mx-auto px-6 lg:px-16">
+          <ScrollReveal delay={0.2}>
+            <div className="text-center mb-16">
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                Why Choose <span className="text-[#00FFD1]">LeadG</span> for Government Contracting?
+              </h2>
+              <p className="text-xl text-white/70 max-w-3xl mx-auto">
+                7+ years of specialized expertise with proven track record of securing $50M+ in government contracts
+              </p>
+            </div>
+          </ScrollReveal>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <ScrollReveal delay={0.3}>
+              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
+                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
+                  <Award className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div className="text-sm font-bold text-[#00FFD1] mb-2">7+ Years Experience</div>
+                <h3 className="text-lg font-bold text-white mb-3">Proven Experience</h3>
+                <p className="text-white/60 text-sm">Deep expertise in Government Contracting with industry-tested strategies and clear understanding of federal processes.</p>
+              </GlassBox>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.4}>
+              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
+                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div className="text-sm font-bold text-[#00FFD1] mb-2">100% In-House</div>
+                <h3 className="text-lg font-bold text-white mb-3">Specialized Team</h3>
+                <p className="text-white/60 text-sm">Dedicated in-house experts trained specifically in government contracting compliance, proposal writing, and federal regulations.</p>
+              </GlassBox>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.5}>
+              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
+                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
+                  <Target className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div className="text-sm font-bold text-[#00FFD1] mb-2">$50M+ Secured</div>
+                <h3 className="text-lg font-bold text-white mb-3">Specialized Training</h3>
+                <p className="text-white/60 text-sm">Our team focuses exclusively on government contracting, building deep expertise in federal, state, and local opportunities.</p>
+              </GlassBox>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.6}>
+              <GlassBox className="p-6 text-center group hover:bg-white/5 transition-all duration-300">
+                <div className="w-16 h-16 bg-[#00FFD1]/20 rounded-none flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="w-8 h-8 text-[#00FFD1] group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div className="text-sm font-bold text-[#00FFD1] mb-2">Multi-Level Reach</div>
+                <h3 className="text-lg font-bold text-white mb-3">Comprehensive Coverage</h3>
+                <p className="text-white/60 text-sm">Federal, state, and local contract opportunities with global perspective for international government projects.</p>
+              </GlassBox>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 
