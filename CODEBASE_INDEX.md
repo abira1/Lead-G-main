@@ -474,7 +474,7 @@ DEBUG=False
 
 #### Frontend (`/app/frontend/.env`)
 ```bash
-REACT_APP_BACKEND_URL=https://pricing-refresh-1.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://pricing-harmony.preview.emergentagent.com
 REACT_APP_ENVIRONMENT=production
 ```
 
@@ -598,7 +598,7 @@ Secondary Admin: mdrudra60@gmail.com
 ## Deployment URLs
 
 ```
-Production Frontend: https://pricing-refresh-1.preview.emergentagent.com
+Production Frontend: https://pricing-harmony.preview.emergentagent.com
 Backend API: /api/* (proxied through frontend URL)
 API Documentation: Disabled in production
 ```

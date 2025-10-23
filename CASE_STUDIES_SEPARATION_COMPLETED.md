@@ -37,7 +37,7 @@
 - Maintains all other sections (Hero, Services, Industries, etc.)
 
 ### New Case Studies Page ✅  
-- Accessible at: `https://pricing-refresh-1.preview.emergentagent.com/case-studies`
+- Accessible at: `https://pricing-harmony.preview.emergentagent.com/case-studies`
 - Professional layout with proper styling
 - Coming Soon messaging with clear expectations
 - Call-to-action buttons directing to Contact and Book Appointment
@@ -89,4 +89,4 @@
 
 **Status**: ✅ COMPLETED - Case Studies successfully separated from homepage
 **Date**: October 10, 2025  
-**URL**: https://pricing-refresh-1.preview.emergentagent.com/case-studies
+**URL**: https://pricing-harmony.preview.emergentagent.com/case-studies
