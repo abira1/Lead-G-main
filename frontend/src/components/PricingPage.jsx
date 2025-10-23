@@ -267,42 +267,42 @@ const PricingPage = () => {
                       >
 
                         {/* Package Header */}
-                        <div className="text-center mb-6">
-                          <h3 className="text-xl font-bold text-white mb-3 h-7 flex items-center justify-center">
+                        <div className="text-center mb-4 md:mb-6">
+                          <h3 className="text-lg md:text-xl font-bold text-white mb-3 h-6 md:h-7 flex items-center justify-center">
                             {pkg.name}
                           </h3>
                           <div className="h-6 mb-4 flex items-center justify-center">
                             {pkg.subtitle && (
-                              <p className="text-sm text-[#00FFD1] font-medium">
+                              <p className="text-xs md:text-sm text-[#00FFD1] font-medium px-2">
                                 {pkg.subtitle}
                               </p>
                             )}
                           </div>
                           <div className="mb-4">
-                            <span className="text-4xl font-bold text-white">
+                            <span className="text-3xl md:text-4xl font-bold text-white">
                               {pkg.price}
                             </span>
-                            <span className="text-lg text-white/70 ml-2">
+                            <span className="text-base md:text-lg text-white/70 ml-2">
                               /{pkg.period}
                             </span>
                           </div>
                           <div className="h-5">
                             {pkg.setupFee && (
-                              <div className="text-sm text-white/60">
+                              <div className="text-xs md:text-sm text-white/60">
                                 Setup: {pkg.setupFee}
                               </div>
                             )}
                           </div>
                           <div className="h-5 mt-1">
                             {pkg.contract && (
-                              <div className="text-sm text-white/60">
+                              <div className="text-xs md:text-sm text-white/60">
                                 {pkg.contract}
                               </div>
                             )}
                           </div>
                           <div className="h-5 mt-1">
                             {pkg.volumeDiscount && (
-                              <div className="text-sm text-[#FF6EB4] font-medium">
+                              <div className="text-xs md:text-sm text-[#FF6EB4] font-medium">
                                 Volume discounts available
                               </div>
                             )}
@@ -310,11 +310,11 @@ const PricingPage = () => {
                         </div>
 
                         {/* Features List */}
-                        <div className="space-y-3 mb-6 flex-1">
+                        <div className="space-y-2 md:space-y-3 mb-4 md:mb-6 flex-1">
                           {pkg.features.map((feature, index) => (
-                            <div key={index} className="flex items-start space-x-3">
+                            <div key={index} className="flex items-start space-x-2 md:space-x-3">
                               <CheckCircle className="w-4 h-4 text-[#00FFD1] flex-shrink-0 mt-0.5" />
-                              <span className="text-white/80 text-sm font-medium leading-relaxed">
+                              <span className="text-white/80 text-xs md:text-sm font-medium leading-relaxed">
                                 {feature}
                               </span>
                             </div>
@@ -322,13 +322,9 @@ const PricingPage = () => {
                         </div>
 
                         {/* CTA Button */}
-                        <div className="mt-auto pt-6">
+                        <div className="mt-auto pt-4 md:pt-6">
                           <Button 
-                            className={`w-full h-12 flex items-center justify-center space-x-3 text-base font-medium border-none rounded-none transition-all duration-500 transform hover:scale-105 hover:shadow-lg ${
-                              pkg.popular
-                                ? 'bg-[#00FFD1] text-black hover:bg-[#00FFD1]/90 hover:shadow-[#00FFD1]/30 hover:text-black'
-                                : 'bg-white/10 text-white hover:bg-[#00FFD1] hover:text-black hover:shadow-[#00FFD1]/25'
-                            }`}
+                            className="w-full h-11 md:h-12 flex items-center justify-center space-x-2 md:space-x-3 text-sm md:text-base font-medium border-none rounded-none transition-all duration-500 transform hover:scale-105 hover:shadow-lg bg-white/10 text-white hover:bg-[#00FFD1] hover:text-black hover:shadow-[#00FFD1]/25"
                             onClick={() => handleChoosePlan(pkg, activeService)}
                           >
                             <span>
