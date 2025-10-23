@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv('/app/frontend/.env')
 
 # Get the backend URL from frontend environment
-BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://codelib-index.preview.emergentagent.com')
+BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://pricing-refresh-1.preview.emergentagent.com')
 API_BASE_URL = f"{BACKEND_URL}/api"
 
 # Test credentials
