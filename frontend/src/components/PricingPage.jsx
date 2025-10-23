@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pricingData } from '../data/mock';
 import { Button } from './ui/button';
-import { CheckCircle, ArrowRight, Phone, Building, Share2 } from 'lucide-react';
+import { CheckCircle, ArrowRight, Phone, Building, Share2, Star } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import GlassBox from './GlassBox';
 
