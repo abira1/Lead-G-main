@@ -183,7 +183,7 @@ const WhyChooseUs = () => {
                   {/* 5 Stars replacing the main number */}
                   <div className="flex items-center justify-center gap-1 mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#00FFD1]">★</span>
+                      <span key={i} className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent">★</span>
                     ))}
                   </div>
                   
