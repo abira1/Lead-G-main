@@ -139,11 +139,11 @@ const Careers = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black pt-28 pb-16 md:pt-32 lg:pt-36 relative overflow-hidden">
-      {/* Background Elements - Fixed to cover entire viewport */}
-      <div className="fixed inset-0 bg-gradient-to-br from-[#0A0B1E] via-[#1A1B3E] to-[#0A0B1E] -z-10"></div>
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.3),transparent_50%)] pointer-events-none -z-10"></div>
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(0,255,209,0.1),transparent_50%)] pointer-events-none -z-10"></div>
+    <section className="pt-28 pb-16 md:pt-32 lg:pt-36 lg:pb-20 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0A0B1E] via-[#1A1B3E] to-[#0A0B1E]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.3),transparent_50%)] pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(0,255,209,0.1),transparent_50%)] pointer-events-none"></div>
       
       <div className="container mx-auto px-6 lg:px-16 relative z-10">
         
