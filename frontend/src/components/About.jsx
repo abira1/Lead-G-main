@@ -13,7 +13,7 @@ const About = () => {
   };
 
   return (
-    <section id="about" className="py-20 lg:py-32 relative overflow-hidden">
+    <section id="about" className="pt-28 pb-20 md:pt-32 lg:pt-36 lg:pb-32 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0A0B1E] via-[#1A1B3E] to-[#0A0B1E]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.3),transparent_50%)] pointer-events-none"></div>
