@@ -40,9 +40,7 @@ const Industries = () => {
             return (
               <ScrollReveal key={index} delay={0.1 * (index + 1)}>
                 <GlassBox 
-                  className="group p-6 cursor-pointer"
-                  hover={true}
-                  hoverScale={1.08}
+                  className="group p-6 cursor-pointer hover:bg-white/10 transition-all duration-300 h-full"
                   glow={true}
                   onClick={() => handleIndustryClick(industry.name)}
                 >
