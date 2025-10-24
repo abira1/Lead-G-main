@@ -48,7 +48,7 @@ const WhyChooseUs = () => {
 
         {/* Our Unique Advantages */}
         <ScrollReveal delay={0.3}>
-          <div className="mb-12 md:mb-16 lg:mb-20">
+          <div className="mb-16 md:mb-20 lg:mb-28 xl:mb-32">
             <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-8 md:mb-12">
               Our <span className="bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent">Unique Advantages</span>
             </h3>
