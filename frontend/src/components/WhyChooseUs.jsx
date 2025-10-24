@@ -81,13 +81,13 @@ const WhyChooseUs = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-4">
             <ScrollReveal delay={0.3}>
               <GlassBox 
-                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300 h-full flex flex-col"
                 blur={20}
                 opacity={0.1}
                 glow={true}
                 shine={true}
               >
-                <div className="mb-4">
+                <div className="mb-4 flex-grow flex flex-col justify-center">
                   <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                     $50M+
                   </div>
@@ -104,13 +104,13 @@ const WhyChooseUs = () => {
             
             <ScrollReveal delay={0.35}>
               <GlassBox 
-                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300 h-full flex flex-col"
                 blur={20}
                 opacity={0.1}
                 glow={true}
                 shine={true}
               >
-                <div className="mb-4">
+                <div className="mb-4 flex-grow flex flex-col justify-center">
                   <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                     28%
                   </div>
@@ -127,13 +127,13 @@ const WhyChooseUs = () => {
             
             <ScrollReveal delay={0.4}>
               <GlassBox 
-                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300 h-full flex flex-col"
                 blur={20}
                 opacity={0.1}
                 glow={true}
                 shine={true}
               >
-                <div className="mb-4">
+                <div className="mb-4 flex-grow flex flex-col justify-center">
                   <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                     2.5x
                   </div>
@@ -150,13 +150,13 @@ const WhyChooseUs = () => {
 
             <ScrollReveal delay={0.45}>
               <GlassBox 
-                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300 h-full flex flex-col"
                 blur={20}
                 opacity={0.1}
                 glow={true}
                 shine={true}
               >
-                <div className="mb-4">
+                <div className="mb-4 flex-grow flex flex-col justify-center">
                   <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                     7+
                   </div>
@@ -173,22 +173,22 @@ const WhyChooseUs = () => {
 
             <ScrollReveal delay={0.5}>
               <GlassBox 
-                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300"
+                className="p-4 md:p-6 lg:p-8 text-center group hover:scale-105 transition-all duration-300 h-full flex flex-col"
                 blur={20}
                 opacity={0.1}
                 glow={true}
                 shine={true}
               >
-                <div className="mb-4">
-                  {/* 5 Stars replacing the main number */}
-                  <div className="flex items-center justify-center gap-1 mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
+                <div className="mb-4 flex-grow flex flex-col justify-center">
+                  {/* 5 Stars replacing the main number - More compact and responsive */}
+                  <div className="flex items-center justify-center gap-0.5 sm:gap-1 mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent">★</span>
+                      <span key={i} className="text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-none bg-gradient-to-r from-[#00FFD1] to-[#7B68EE] bg-clip-text text-transparent">★</span>
                     ))}
                   </div>
                   
                   {/* Title */}
-                  <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2">
+                  <div className="text-sm md:text-base text-white font-semibold mb-1 md:mb-2 leading-tight">
                     100% Client Satisfaction
                   </div>
                   
