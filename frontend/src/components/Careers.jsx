@@ -184,7 +184,7 @@ const Careers = () => {
 
         {/* Open Positions */}
         <ScrollReveal delay={0.4}>
-          <div className="mb-16">
+          <div className="mb-16 mt-20 md:mt-24 lg:mt-28">
             <h2 className="text-3xl font-bold text-white mb-12 text-center">Open Positions</h2>
             <div className="grid gap-8">
               {openPositions.map((position, index) => (
