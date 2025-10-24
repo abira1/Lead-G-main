@@ -283,7 +283,7 @@ const Careers = () => {
           </GlassBox>
         </ScrollReveal>
       </div>
-    </div>
+    </section>
   );
 };
 
