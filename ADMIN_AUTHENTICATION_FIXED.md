@@ -47,7 +47,7 @@ const getBackendUrl = () => {
   // Try environment variable first
   // Fallback based on current domain:
   // - localhost -> http://localhost:8001
-  // - preview.emergentagent.com -> https://pricing-harmony.preview.emergentagent.com
+  // - preview.emergentagent.com -> https://spacing-rhythm.preview.emergentagent.com
   // - production domains -> production backend
 }
 ```
@@ -75,7 +75,7 @@ const getBackendUrl = () => {
 
 The admin panel now works across:
 - ✅ `http://localhost:3000/admin`
-- ✅ `https://pricing-harmony.preview.emergentagent.com/admin`
+- ✅ `https://spacing-rhythm.preview.emergentagent.com/admin`
 - ✅ Any future production domains (after Firebase configuration)
 
 ## Firebase Configuration Required
@@ -118,10 +118,10 @@ All admin panel functionality working:
 
 ```bash
 # Test API health
-curl -X GET "https://pricing-harmony.preview.emergentagent.com/api/health"
+curl -X GET "https://spacing-rhythm.preview.emergentagent.com/api/health"
 
 # Test login API
-curl -X POST "https://pricing-harmony.preview.emergentagent.com/api/admin/login" \
+curl -X POST "https://spacing-rhythm.preview.emergentagent.com/api/admin/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "toiral.dev@gmail.com", "password": "testadmin"}'
 ```

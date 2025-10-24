@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv('/app/frontend/.env')
 
 # Get the backend URL from frontend environment
-BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://pricing-harmony.preview.emergentagent.com')
+BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://spacing-rhythm.preview.emergentagent.com')
 API_BASE_URL = f"{BACKEND_URL}/api"
 
 class BackendTester:
@@ -159,7 +159,7 @@ class BackendTester:
             response = requests.options(
                 f"{API_BASE_URL}/status",
                 headers={
-                    'Origin': 'https://pricing-harmony.preview.emergentagent.com',
+                    'Origin': 'https://spacing-rhythm.preview.emergentagent.com',
                     'Access-Control-Request-Method': 'POST',
                     'Access-Control-Request-Headers': 'Content-Type'
                 },

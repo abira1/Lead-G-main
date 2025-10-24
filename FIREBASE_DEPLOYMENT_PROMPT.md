@@ -6,7 +6,7 @@
 - **Frontend**: React application (located in `/app/frontend/`)
 - **Backend**: FastAPI Python application (located in `/app/backend/`)
 - **Current Database**: MongoDB + Mock Firebase Realtime Database
-- **Current Deployment**: Preview environment at `https://pricing-harmony.preview.emergentagent.com`
+- **Current Deployment**: Preview environment at `https://spacing-rhythm.preview.emergentagent.com`
 
 **Key Features to Deploy:**
 1. **Appointment Booking System** - Public appointment booking with admin management
