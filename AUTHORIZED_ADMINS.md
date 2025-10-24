@@ -21,7 +21,7 @@ The following email addresses are authorized to access the Lead G admin panel:
 
 ## Admin Panel Access
 
-**URL**: https://spacing-rhythm.preview.emergentagent.com/admin
+**URL**: https://job-page-fix.preview.emergentagent.com/admin
 
 ## Security Notes
 
