@@ -474,7 +474,7 @@ DEBUG=False
 
 #### Frontend (`/app/frontend/.env`)
 ```bash
-REACT_APP_BACKEND_URL=https://job-page-fix.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://lead-generator-21.preview.emergentagent.com
 REACT_APP_ENVIRONMENT=production
 ```
 
@@ -598,7 +598,7 @@ Secondary Admin: mdrudra60@gmail.com
 ## Deployment URLs
 
 ```
-Production Frontend: https://job-page-fix.preview.emergentagent.com
+Production Frontend: https://lead-generator-21.preview.emergentagent.com
 Backend API: /api/* (proxied through frontend URL)
 API Documentation: Disabled in production
 ```
