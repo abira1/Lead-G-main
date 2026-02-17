@@ -274,7 +274,7 @@ const TestimonialManager = ({ token }) => {
                 required
               />
               <p className="text-xs text-white/50 mt-1">
-                {formData.testimonial.length}/500 characters
+                {(formData.testimonial || '').length}/500 characters
               </p>
             </div>
 
