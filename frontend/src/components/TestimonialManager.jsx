@@ -116,14 +116,10 @@ const TestimonialManager = ({ token }) => {
 
   const handleEdit = (testimonial) => {
     setFormData({
-      client_name: testimonial.client_name || '',
-      company: testimonial.company || '',
-      position: testimonial.position || '',
-      testimonial_text: testimonial.testimonial_text || '',
-      rating: testimonial.rating || 5,
-      image_url: testimonial.image_url || '',
-      is_featured: testimonial.is_featured || false,
-      display_order: testimonial.display_order || 0
+      company_name: testimonial.company_name || '',
+      logo_url: testimonial.logo_url || '',
+      testimonial: testimonial.testimonial || '',
+      author: testimonial.author || ''
     });
     setEditingId(testimonial.id);
     setShowForm(true);
