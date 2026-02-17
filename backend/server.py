@@ -39,6 +39,7 @@ from models import (
     WorkedWithCompany, WorkedWithCompanyCreate,
     APIResponse
 )
+from imgbb_utils import upload_to_imgbb, validate_image_file
 
 # Configure logging
 logging.basicConfig(
