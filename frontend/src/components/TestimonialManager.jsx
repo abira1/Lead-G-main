@@ -149,14 +149,10 @@ const TestimonialManager = ({ token }) => {
 
   const resetForm = () => {
     setFormData({
-      client_name: '',
-      company: '',
-      position: '',
-      testimonial_text: '',
-      rating: 5,
-      image_url: '',
-      is_featured: false,
-      display_order: 0
+      company_name: '',
+      logo_url: '',
+      testimonial: '',
+      author: ''
     });
     setEditingId(null);
     setShowForm(false);
