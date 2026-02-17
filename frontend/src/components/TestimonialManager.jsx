@@ -36,7 +36,7 @@ const TestimonialManager = ({ token }) => {
       console.log('💬 Fetching testimonials for admin...');
       const result = await getTestimonials();
       
-      if (result.success) {
+      if (result.success && Array.isArray(result.data)) {
         setTestimonials(result.data);
         console.log(`✅ Loaded ${result.data.length} testimonials`);
       } else {
