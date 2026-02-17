@@ -318,7 +318,7 @@ const TestimonialManager = ({ token }) => {
       {/* Testimonials List */}
       <GlassBox className="p-6" blur={16} opacity={0.1}>
         <h3 className="text-xl font-bold text-white mb-4">
-          All Testimonials ({testimonials.length})
+          All Testimonials ({Array.isArray(testimonials) ? testimonials.length : 0})
         </h3>
 
         {loading ? (
@@ -330,7 +330,7 @@ const TestimonialManager = ({ token }) => {
           <div className="text-center py-8">
             <p className="text-red-400">{error}</p>
           </div>
-        ) : testimonials.length === 0 ? (
+        ) : !Array.isArray(testimonials) || testimonials.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-white/70">No testimonials yet. Add your first testimonial!</p>
           </div>
