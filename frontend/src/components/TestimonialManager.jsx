@@ -18,14 +18,10 @@ const TestimonialManager = ({ token }) => {
   const [editingId, setEditingId] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
-    client_name: '',
-    company: '',
-    position: '',
-    testimonial_text: '',
-    rating: 5,
-    image_url: '',
-    is_featured: false,
-    display_order: 0
+    company_name: '',
+    logo_url: '',
+    testimonial: '',
+    author: ''
   });
 
   useEffect(() => {
