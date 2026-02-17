@@ -7,7 +7,7 @@ import {
   createWorkedWithCompany, 
   updateWorkedWithCompany, 
   deleteWorkedWithCompany,
-  uploadLogo 
+  uploadLogoToImgBB 
 } from '../services/firebaseService';
 
 const WorkedWithManager = ({ token }) => {
