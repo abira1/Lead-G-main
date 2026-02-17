@@ -788,6 +788,7 @@ export default {
   // File Upload
   uploadLogo,
   uploadFile,
+  uploadLogoToImgBB,
   
   // Health Check
   checkFirebaseConnection
