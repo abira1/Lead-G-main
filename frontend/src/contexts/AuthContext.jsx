@@ -18,9 +18,19 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [token, setToken] = useState(null);
 
   // Monitor Firebase Auth state changes
   useEffect(() => {
+    // Check for stored token on mount
+    const storedToken = localStorage.getItem('admin_token');
+    const storedEmail = localStorage.getItem('admin_email');
+    
+    if (storedToken && storedEmail) {
+      console.log('🔑 Found stored admin token for:', storedEmail);
+      setToken(storedToken);
+    }
+    
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log('🔄 Auth state changed:', user?.email || 'No user');
       setError(null);
@@ -33,10 +43,19 @@ export const AuthProvider = ({ children }) => {
         if (adminCheck.success && adminCheck.isAdmin) {
           setIsAuthenticated(true);
           setIsAdmin(true);
-          console.log('✅ Admin user authenticated:', user.email);
+          
+          // Get token from localStorage
+          const storedToken = localStorage.getItem('admin_token');
+          if (storedToken) {
+            setToken(storedToken);
+            console.log('✅ Admin user authenticated with token:', user.email);
+          } else {
+            console.log('⚠️ Admin authenticated but no token found');
+          }
         } else {
           setIsAuthenticated(false);
           setIsAdmin(false);
+          setToken(null);
           console.log('❌ User is not an admin:', user.email);
           // Sign out non-admin users
           await logoutAdmin();
@@ -45,6 +64,7 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(null);
         setIsAuthenticated(false);
         setIsAdmin(false);
+        setToken(null);
         console.log('👤 No user authenticated');
       }
       
