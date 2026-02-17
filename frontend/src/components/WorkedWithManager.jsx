@@ -68,32 +68,21 @@ const WorkedWithManager = ({ token }) => {
     setUploading(true);
     
     try {
-      const backendUrl = getBackendUrl();
-      const uploadFormData = new FormData();
-      uploadFormData.append('file', file);
+      console.log('📤 Uploading worked with company logo to ImgBB...');
+      const result = await uploadLogoToImgBB(file, 'worked-with', token);
 
-      const response = await fetch(`${backendUrl}/api/testimonials/upload-logo`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        mode: 'cors',
-        credentials: 'omit',
-        body: uploadFormData,
-      });
-
-      if (response.ok) {
-        const result = await response.json();
+      if (result.success) {
         setFormData(prev => ({
           ...prev,
-          logo_url: result.logo_url
+          logo_url: result.url
         }));
+        console.log('✅ Logo uploaded successfully to ImgBB:', result.url);
+        alert('Logo uploaded successfully!');
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to upload logo');
+        throw new Error(result.error || 'Failed to upload logo');
       }
     } catch (error) {
-      console.error('Error uploading logo:', error);
+      console.error('❌ Error uploading logo:', error);
       alert('Failed to upload logo: ' + error.message);
     } finally {
       setUploading(false);
