@@ -62,7 +62,8 @@ JWT_EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", "15"))
 # Authorized admin emails
 AUTHORIZED_ADMIN_EMAILS = [
     os.getenv("ADMIN_EMAIL"),
-    "mdrudra60@gmail.com"
+    "mdrudra60@gmail.com",
+    "toiral.dev@gmail.com"
 ]
 AUTHORIZED_ADMIN_EMAILS = [e for e in AUTHORIZED_ADMIN_EMAILS if e]
 
