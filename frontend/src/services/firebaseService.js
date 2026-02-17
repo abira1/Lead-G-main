@@ -520,7 +520,39 @@ export const loginAdminWithGoogle = async () => {
       return { success: false, error: 'User is not authorized as an admin' };
     }
     
-    console.log('✅ Admin Google login successful:', user.email);
+    console.log('✅ Firebase Google login successful:', user.email);
+    
+    // Get Firebase ID token
+    const idToken = await user.getIdToken();
+    
+    // Call backend to get JWT token
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+    console.log('🔑 Getting backend JWT token...');
+    
+    const backendResponse = await fetch(`${backendUrl}/api/admin/google-login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: user.email,
+        idToken: idToken
+      })
+    });
+    
+    if (!backendResponse.ok) {
+      const errorData = await backendResponse.json();
+      throw new Error(errorData.detail || 'Failed to authenticate with backend');
+    }
+    
+    const backendData = await backendResponse.json();
+    const jwtToken = backendData.access_token;
+    
+    // Store JWT token in localStorage
+    localStorage.setItem('admin_token', jwtToken);
+    localStorage.setItem('admin_email', user.email);
+    
+    console.log('✅ Backend JWT token obtained and stored');
     
     return { 
       success: true, 
@@ -530,7 +562,8 @@ export const loginAdminWithGoogle = async () => {
         displayName: user.displayName,
         photoURL: user.photoURL,
         role: 'admin',
-        authorized_by: 'email_whitelist'
+        authorized_by: 'email_whitelist',
+        token: jwtToken
       }
     };
   } catch (error) {
