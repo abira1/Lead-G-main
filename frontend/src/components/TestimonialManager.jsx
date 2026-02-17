@@ -255,10 +255,7 @@ const TestimonialManager = ({ token }) => {
                   <div className="mt-2">
                     <p className="text-xs text-white/50 mb-1">Preview:</p>
                     <img
-                      src={formData.logo_url.startsWith('/uploads') 
-                        ? `${process.env.REACT_APP_BACKEND_URL}${formData.logo_url}`
-                        : formData.logo_url
-                      }
+                      src={formData.logo_url}
                       alt="Logo preview"
                       className="h-20 w-20 object-contain border border-white/20 p-2 bg-white/5"
                       onError={(e) => {
