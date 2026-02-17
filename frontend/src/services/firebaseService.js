@@ -655,6 +655,78 @@ export const uploadFile = async (file, folder = 'uploads') => {
   }
 };
 
+/**
+ * Upload logo to ImgBB via backend API
+ * @param {File} file - The image file to upload
+ * @param {string} type - Type of upload: 'testimonial' or 'worked-with'
+ * @param {string} token - Admin authentication token
+ */
+export const uploadLogoToImgBB = async (file, type = 'testimonial', token) => {
+  try {
+    if (!file) {
+      return { success: false, error: 'No file provided' };
+    }
+    
+    if (!token) {
+      return { success: false, error: 'Authentication token required' };
+    }
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      return { success: false, error: 'File must be an image' };
+    }
+    
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      return { success: false, error: 'File size must be less than 5MB' };
+    }
+    
+    // Determine the endpoint based on type
+    const endpoint = type === 'worked-with' 
+      ? '/api/worked-with/upload-logo'
+      : '/api/testimonials/upload-logo';
+    
+    // Get backend URL
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+    
+    // Create form data
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    console.log(`📤 Uploading ${type} logo to ImgBB via backend:`, file.name);
+    
+    // Upload to backend (which will forward to ImgBB)
+    const response = await fetch(`${backendUrl}${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Failed to upload logo');
+    }
+    
+    const result = await response.json();
+    
+    console.log('✅ Logo uploaded successfully to ImgBB:', result.logo_url);
+    return { 
+      success: true, 
+      url: result.logo_url,
+      displayUrl: result.display_url,
+      fileName: result.filename 
+    };
+  } catch (error) {
+    const errorMessage = error.message || 'Failed to upload logo';
+    console.error('❌ Error uploading logo to ImgBB:', errorMessage);
+    return { success: false, error: errorMessage };
+  }
+};
+
+
 // ============================================
 // HEALTH CHECK / STATUS
 // ============================================
