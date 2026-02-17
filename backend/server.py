@@ -1026,6 +1026,48 @@ async def delete_testimonial(testimonial_id: str, current_user: str = Depends(ve
 
 # Worked With Companies Endpoints
 
+
+@app.post(f"{settings.API_V1_STR}/worked-with/upload-logo")
+async def upload_worked_with_logo(file: UploadFile = File(...), current_user: str = Depends(verify_token)):
+    """Upload a worked with company logo to ImgBB (admin endpoint)"""
+    try:
+        # Read file content
+        file_content = await file.read()
+        
+        # Validate the image file
+        validation_error = validate_image_file(file_content, file.content_type, max_size_mb=5)
+        if validation_error:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=validation_error
+            )
+        
+        # Upload to ImgBB
+        result = upload_to_imgbb(file_content, file.filename)
+        
+        if result["success"]:
+            logger.info(f"✅ Worked with company logo uploaded to ImgBB: {file.filename}")
+            return {
+                "success": True,
+                "logo_url": result["url"],
+                "display_url": result.get("display_url", result["url"]),
+                "filename": file.filename
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=result.get("error", "Failed to upload logo to ImgBB")
+            )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Failed to upload worked with logo: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to upload logo: {str(e)}"
+        )
+
 @app.post(f"{settings.API_V1_STR}/worked-with", response_model=WorkedWithCompany)
 async def create_worked_with_company(company_data: WorkedWithCompanyCreate, current_user: str = Depends(verify_token)):
     """Create a new worked with company (admin endpoint)"""
