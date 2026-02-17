@@ -351,7 +351,7 @@ const TestimonialManager = ({ token }) => {
                 <div className="flex items-start space-x-4">
                   {/* Logo */}
                   <img
-                    src={`${process.env.REACT_APP_BACKEND_URL}${testimonial.logo_url}`}
+                    src={testimonial.logo_url}
                     alt={`${testimonial.company_name} logo`}
                     className="h-16 w-16 object-contain border border-white/20 p-2 bg-white/5 flex-shrink-0"
                     onError={(e) => {
