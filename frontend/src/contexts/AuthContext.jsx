@@ -109,6 +109,11 @@ export const AuthProvider = ({ children }) => {
       
       console.log('🚪 Logging out admin');
       
+      // Clear stored token
+      localStorage.removeItem('admin_token');
+      localStorage.removeItem('admin_email');
+      setToken(null);
+      
       const result = await logoutAdmin();
       
       if (result.success) {
