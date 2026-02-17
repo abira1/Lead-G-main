@@ -127,7 +127,7 @@ def validate_image_file(file_content: bytes, content_type: str, max_size_mb: int
         "image/gif", "image/webp", "image/svg+xml", "image/bmp"
     ]
     if content_type not in allowed_types:
-        return f"Invalid file type. Allowed types: JPEG, PNG, GIF, WebP, SVG, BMP"
+        return "Invalid file type. Allowed types: JPEG, PNG, GIF, WebP, SVG, BMP"
     
     # Validate file size
     max_size_bytes = max_size_mb * 1024 * 1024
