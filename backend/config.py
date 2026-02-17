@@ -27,7 +27,7 @@ class Settings:
             "http://localhost:3000",
             "http://localhost:3001", 
             "http://127.0.0.1:3000",
-            "https://lead-generator-21.preview.emergentagent.com",
+            "https://auth-upload-issue.preview.emergentagent.com",
             "https://lead-g-final.firebaseapp.com",
             "https://lead-g-final.web.app"
         ]

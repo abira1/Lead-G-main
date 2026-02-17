@@ -50,10 +50,10 @@ export const getBackendUrl = () => {
   if (currentHost.includes('localhost') || currentHost.includes('127.0.0.1')) {
     return 'http://localhost:8001';
   } else if (currentHost.includes('preview.emergentagent.com')) {
-    return 'https://lead-generator-21.preview.emergentagent.com';
+    return 'https://auth-upload-issue.preview.emergentagent.com';
   } else {
     // Production fallback
-    return 'https://lead-generator-21.preview.emergentagent.com';
+    return 'https://auth-upload-issue.preview.emergentagent.com';
   }
 };
 

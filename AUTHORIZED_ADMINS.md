@@ -21,7 +21,7 @@ The following email addresses are authorized to access the Lead G admin panel:
 
 ## Admin Panel Access
 
-**URL**: https://lead-generator-21.preview.emergentagent.com/admin
+**URL**: https://auth-upload-issue.preview.emergentagent.com/admin
 
 ## Security Notes
 
