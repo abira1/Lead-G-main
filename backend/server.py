@@ -872,48 +872,45 @@ async def export_appointments_excel(status_filter: str = None, current_user: str
 
 # Testimonials Endpoints
 
-# Create uploads directory for logos
-UPLOAD_DIR = Path("/app/backend/uploads/logos")
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-
 @app.post(f"{settings.API_V1_STR}/testimonials/upload-logo")
-async def upload_logo(file: UploadFile = File(...), current_user: str = Depends(verify_token)):
-    """Upload a company logo (admin endpoint)"""
+async def upload_testimonial_logo(file: UploadFile = File(...), current_user: str = Depends(verify_token)):
+    """Upload a testimonial company logo to ImgBB (admin endpoint)"""
     try:
-        # Validate file type
-        allowed_types = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp", "image/svg+xml"]
-        if file.content_type not in allowed_types:
+        # Read file content
+        file_content = await file.read()
+        
+        # Validate the image file
+        validation_error = validate_image_file(file_content, file.content_type, max_size_mb=5)
+        if validation_error:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Invalid file type. Only images are allowed (JPEG, PNG, GIF, WebP, SVG)."
+                detail=validation_error
             )
         
-        # Generate unique filename
-        file_extension = file.filename.split(".")[-1]
-        unique_filename = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}"
-        file_path = UPLOAD_DIR / unique_filename
+        # Upload to ImgBB
+        result = upload_to_imgbb(file_content, file.filename)
         
-        # Save file
-        with file_path.open("wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-        
-        # Return the URL path
-        logo_url = f"/uploads/logos/{unique_filename}"
-        
-        logger.info(f"Logo uploaded: {unique_filename}")
-        return {
-            "success": True,
-            "logo_url": logo_url,
-            "filename": unique_filename
-        }
+        if result["success"]:
+            logger.info(f"✅ Testimonial logo uploaded to ImgBB: {file.filename}")
+            return {
+                "success": True,
+                "logo_url": result["url"],
+                "display_url": result.get("display_url", result["url"]),
+                "filename": file.filename
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=result.get("error", "Failed to upload logo to ImgBB")
+            )
         
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Failed to upload logo: {e}")
+        logger.error(f"❌ Failed to upload testimonial logo: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to upload logo"
+            detail=f"Failed to upload logo: {str(e)}"
         )
 
 @app.post(f"{settings.API_V1_STR}/testimonials", response_model=Testimonial)
