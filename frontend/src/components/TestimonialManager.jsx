@@ -80,8 +80,13 @@ const TestimonialManager = ({ token }) => {
     e.preventDefault();
 
     // Validation
-    if (!formData.client_name || !formData.company || !formData.testimonial_text) {
-      alert('Please fill in all required fields (Client Name, Company, Testimonial)');
+    if (!formData.company_name || !formData.testimonial || !formData.author) {
+      alert('Please fill in all required fields (Company Name, Testimonial, Author)');
+      return;
+    }
+
+    if (!formData.logo_url) {
+      alert('Please upload a logo or provide a logo URL');
       return;
     }
 
