@@ -7,10 +7,10 @@ import {
   createTestimonial, 
   updateTestimonial, 
   deleteTestimonial,
-  uploadFile 
+  uploadLogoToImgBB 
 } from '../services/firebaseService';
 
-const TestimonialManager = () => {
+const TestimonialManager = ({ token }) => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
