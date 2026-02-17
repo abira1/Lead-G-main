@@ -146,14 +146,12 @@ export const AuthProvider = ({ children }) => {
     isAdmin,
     loading,
     error,
+    token,
     
     // Methods
     login,
     logout,
     clearError,
-    
-    // Legacy compatibility (for existing components)
-    token: currentUser?.accessToken || null,
   };
 
   return (
