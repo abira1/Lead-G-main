@@ -207,7 +207,7 @@ test_plan:
 
 agent_communication:
   - agent: "main"
-    message: "Fixed the root cause of admin logo upload issue. The problem was that Google OAuth login was not calling the backend to get JWT token. Updated loginAdminWithGoogle() to retrieve and store JWT token. Updated AuthContext to properly manage token from localStorage. Added both admin emails to backend authorized list. Created .env file with ImageBB API key and JWT configuration. Backend and frontend services are now running. Ready for testing."
+    message: "FIXED Method Not Allowed error - removed duplicate /api from REACT_APP_BACKEND_URL in frontend .env. Frontend restarted. Google login should now call correct endpoint: /api/admin/google-login. This will allow JWT token to be retrieved and stored, enabling logo uploads to work."
 
 user_problem_statement: "COMPLETED: Admin panel design updated and careers page added. COMPLETED: Industries dedicated page created at /industries with interactive selector buttons and dynamic content. COMPLETED: Industries page image integration with new industry-specific images. COMPLETED: Updated 'Why Choose LeadG?' section by removing two sections ('Main Services Highlight' and 'Key Differentiators'), implementing responsive padding, and removing separate background to match overall website theme. Section now displays only the header, description, and three success metrics cards with proper responsive design. NEW TASK COMPLETED: Removed 'Case Studies' navigation item from frontend navbar by modifying /app/frontend/src/data/mock.js, App.js routes, and Footer.jsx. Backend functionality verified to remain unaffected by frontend navigation changes."
 
