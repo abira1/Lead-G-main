@@ -62,19 +62,19 @@ const TestimonialManager = ({ token }) => {
     setUploading(true);
 
     try {
-      console.log('📤 Uploading testimonial image to Firebase Storage...');
-      const result = await uploadFile(file, 'testimonials');
+      console.log('📤 Uploading testimonial logo to ImgBB...');
+      const result = await uploadLogoToImgBB(file, 'testimonial', token);
 
       if (result.success) {
-        setFormData(prev => ({ ...prev, image_url: result.url }));
-        console.log('✅ Image uploaded successfully:', result.url);
-        alert('Image uploaded successfully!');
+        setFormData(prev => ({ ...prev, logo_url: result.url }));
+        console.log('✅ Logo uploaded successfully to ImgBB:', result.url);
+        alert('Logo uploaded successfully!');
       } else {
-        throw new Error(result.error || 'Failed to upload image');
+        throw new Error(result.error || 'Failed to upload logo');
       }
     } catch (error) {
-      console.error('❌ Error uploading image:', error);
-      alert('Failed to upload image: ' + error.message);
+      console.error('❌ Error uploading logo:', error);
+      alert('Failed to upload logo: ' + error.message);
     } finally {
       setUploading(false);
     }
