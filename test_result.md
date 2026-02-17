@@ -102,6 +102,113 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
+user_problem_statement: "Admin cannot upload logo from admin panel. Shows invalid admin credential error when using Google login. Need to ensure image upload works smoothly with ImageBB API."
+
+backend:
+  - task: "ImageBB API Integration"
+    implemented: true
+    working: true
+    file: "backend/imgbb_utils.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "ImageBB API key configured in .env file. API utility functions already exist for upload and validation."
+  
+  - task: "JWT Token Authentication for Admin"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Created .env file with JWT_SECRET_KEY, ADMIN_EMAIL, ADMIN_PASSWORD_HASH. Added both admin emails (mdrudra60@gmail.com, toiral.dev@gmail.com) to AUTHORIZED_ADMIN_EMAILS list."
+  
+  - task: "Google OAuth Login Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Backend endpoint /api/admin/google-login exists and creates JWT tokens for authorized admin emails."
+  
+  - task: "Logo Upload Endpoints"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Two logo upload endpoints exist: /api/testimonials/upload-logo and /api/worked-with/upload-logo. Both require JWT token authentication via verify_token dependency."
+
+frontend:
+  - task: "Google Login Token Retrieval"
+    implemented: true
+    working: true
+    file: "frontend/src/services/firebaseService.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "FIXED: Updated loginAdminWithGoogle() to call backend /api/admin/google-login endpoint after Firebase authentication, retrieve JWT token, and store it in localStorage."
+  
+  - task: "AuthContext Token Management"
+    implemented: true
+    working: true
+    file: "frontend/src/contexts/AuthContext.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "FIXED: Updated AuthContext to properly manage JWT token from localStorage instead of trying to get accessToken from Firebase user object. Token is now stored in state and retrieved from localStorage on mount."
+  
+  - task: "Logo Upload with Authentication"
+    implemented: true
+    working: true
+    file: "frontend/src/services/firebaseService.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "uploadLogoToImgBB function sends JWT token in Authorization header. With proper token management, this should now work correctly."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Google Login Token Retrieval"
+    - "Logo Upload with Authentication"
+    - "ImageBB API Integration"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Fixed the root cause of admin logo upload issue. The problem was that Google OAuth login was not calling the backend to get JWT token. Updated loginAdminWithGoogle() to retrieve and store JWT token. Updated AuthContext to properly manage token from localStorage. Added both admin emails to backend authorized list. Created .env file with ImageBB API key and JWT configuration. Backend and frontend services are now running. Ready for testing."
+
 user_problem_statement: "COMPLETED: Admin panel design updated and careers page added. COMPLETED: Industries dedicated page created at /industries with interactive selector buttons and dynamic content. COMPLETED: Industries page image integration with new industry-specific images. COMPLETED: Updated 'Why Choose LeadG?' section by removing two sections ('Main Services Highlight' and 'Key Differentiators'), implementing responsive padding, and removing separate background to match overall website theme. Section now displays only the header, description, and three success metrics cards with proper responsive design. NEW TASK COMPLETED: Removed 'Case Studies' navigation item from frontend navbar by modifying /app/frontend/src/data/mock.js, App.js routes, and Footer.jsx. Backend functionality verified to remain unaffected by frontend navigation changes."
 
 backend:
